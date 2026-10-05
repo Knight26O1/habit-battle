@@ -109,6 +109,398 @@ body.day .card{box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.65)}
 .rb2{background:rgba(24,30,27,.90);color:#f3efe5;border:1px solid rgba(216,190,137,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 body.day .rb2{background:rgba(252,251,246,.92);color:#27312c;border-color:rgba(47,65,56,.12)}
 
+
+/* ================================================================
+   V11 — LUXURY LIVING DASHBOARD
+   ================================================================ */
+:root{
+  --bg:#0a0f0e;
+  --bg1:#111917;
+  --card:rgba(18,25,23,.70);
+  --card2:rgba(24,31,29,.52);
+  --gl:rgba(255,255,255,.045);
+  --tx:#f2efe7;
+  --mu:#a8afa9;
+  --bd:rgba(232,225,208,.12);
+  --a:#87ab99;
+  --b:#c6a466;
+  --lime:#c7ab6a;
+  --ok:#8fb8a2;
+  --danger:#b88b83;
+  --shadow:0 30px 90px rgba(0,0,0,.34);
+  --softshadow:0 12px 38px rgba(0,0,0,.18);
+  --line:rgba(255,255,255,.08);
+  --scene:#13211c;
+}
+body.day{
+  --bg:#edf1ed;
+  --bg1:#f8f6ef;
+  --card:rgba(255,255,252,.70);
+  --card2:rgba(255,255,255,.48);
+  --gl:rgba(43,60,52,.045);
+  --tx:#1c2823;
+  --mu:#68746d;
+  --bd:rgba(40,57,49,.12);
+  --a:#5e8874;
+  --b:#b78a46;
+  --lime:#b99450;
+  --ok:#5c8a72;
+  --danger:#a56f68;
+  --shadow:0 28px 80px rgba(58,73,66,.13);
+  --softshadow:0 12px 30px rgba(58,73,66,.09);
+  --line:rgba(42,60,51,.09);
+  --scene:#dce8df;
+}
+
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 0 -8%,rgba(105,142,124,.14),transparent 70%),
+    radial-gradient(800px 600px at 100% 12%,rgba(198,164,102,.10),transparent 68%),
+    linear-gradient(180deg,var(--bg1),var(--bg));
+  color:var(--tx);
+  transition:background .8s ease,color .5s ease;
+}
+body:before{
+  background:
+    radial-gradient(500px 300px at 17% 10%,rgba(255,255,255,.06),transparent 70%),
+    radial-gradient(600px 350px at 82% 25%,rgba(198,164,102,.055),transparent 70%);
+  opacity:1;
+}
+body.day:before{
+  background:
+    radial-gradient(600px 350px at 17% 6%,rgba(255,255,255,.70),transparent 68%),
+    radial-gradient(650px 400px at 82% 23%,rgba(201,177,127,.10),transparent 70%);
+}
+
+/* ---------- cinematic ambient scene ---------- */
+#sky{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+#sky:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,transparent 0 48%,rgba(34,58,48,.04) 68%,rgba(12,20,17,.20) 100%);
+  pointer-events:none;
+}
+body.day #sky:before{
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 48%,rgba(74,105,89,.10) 100%);
+}
+
+/* atmospheric glass orbs */
+.ambient-orb{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.10);
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.18),rgba(255,255,255,.025) 48%,transparent 72%);
+  box-shadow:inset 0 0 30px rgba(255,255,255,.035),0 25px 80px rgba(0,0,0,.08);
+  filter:blur(.2px);
+  animation:orbFloat var(--d) ease-in-out infinite alternate;
+}
+body.day .ambient-orb{border-color:rgba(55,76,65,.09);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.65),rgba(255,255,255,.08) 50%,transparent 72%)}
+@keyframes orbFloat{to{transform:translate3d(var(--x),var(--y),0) scale(1.04)}}
+
+/* subtle grain gives the surface a designed, tactile feel */
+#sky:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+
+/* floating atmospheric motes */
+.mote{
+  position:absolute;
+  width:3px;height:3px;
+  border-radius:50%;
+  background:rgba(224,214,188,.55);
+  box-shadow:0 0 10px rgba(224,214,188,.22);
+  animation:moteDrift var(--d) linear infinite;
+  opacity:0;
+}
+body.day .mote{background:rgba(84,111,96,.20);box-shadow:none}
+@keyframes moteDrift{
+  0%{transform:translate3d(0,20vh,0);opacity:0}
+  15%{opacity:.35}
+  50%{transform:translate3d(var(--dx),-10vh,0);opacity:.22}
+  85%{opacity:.12}
+  100%{transform:translate3d(calc(var(--dx)*1.7),-35vh,0);opacity:0}
+}
+
+/* ---------- redesigned landscape ---------- */
+.lux-scene{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:285px;
+  pointer-events:none;
+  overflow:hidden;
+}
+.scene-glow{
+  position:absolute;
+  width:500px;height:180px;
+  left:50%;bottom:35px;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(129,159,141,.16),transparent 70%);
+  filter:blur(14px);
+}
+body.day .scene-glow{background:radial-gradient(ellipse,rgba(174,151,105,.13),transparent 70%)}
+
+/* distant hills */
+.hill{
+  position:absolute;
+  bottom:0;
+  width:75vw;
+  height:150px;
+  background:linear-gradient(165deg,rgba(72,100,87,.16),rgba(37,59,49,.30));
+  border-radius:50% 55% 0 0;
+  filter:blur(.4px);
+}
+.hill.h1{left:-20vw;transform:rotate(2deg)}
+.hill.h2{right:-28vw;bottom:-14px;height:175px;opacity:.72;transform:rotate(-2deg)}
+body.day .hill{background:linear-gradient(165deg,rgba(112,143,125,.16),rgba(76,108,91,.25))}
+body:not(.day) .hill{background:linear-gradient(165deg,rgba(49,77,65,.16),rgba(18,31,25,.55))}
+
+/* refined grass silhouette */
+.grass{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:82px;
+  background:
+    linear-gradient(180deg,transparent,rgba(33,54,44,.28)),
+    repeating-linear-gradient(93deg,transparent 0 28px,rgba(111,143,123,.11) 29px 31px,transparent 32px 57px);
+  clip-path:polygon(0 45%,4% 38%,8% 50%,13% 31%,18% 49%,23% 35%,29% 51%,35% 29%,40% 49%,46% 34%,52% 51%,58% 30%,63% 48%,69% 35%,75% 49%,82% 28%,88% 49%,94% 34%,100% 45%,100% 100%,0 100%);
+}
+body.day .grass{background:linear-gradient(180deg,transparent,rgba(65,99,80,.16)),repeating-linear-gradient(93deg,transparent 0 28px,rgba(88,125,104,.12) 29px 31px,transparent 32px 57px)}
+
+/* elegant botanical shapes */
+.botanical{
+  position:absolute;
+  bottom:24px;
+  width:130px;height:175px;
+  opacity:.68;
+  filter:drop-shadow(0 18px 18px rgba(0,0,0,.12));
+}
+.botanical.left{left:9vw}.botanical.right{right:9vw;transform:scaleX(-1)}
+.stem{
+  position:absolute;bottom:0;left:50%;
+  width:3px;height:145px;
+  background:linear-gradient(#7b9d89,#3d5e4e);
+  transform-origin:bottom;
+}
+.leaflet{
+  position:absolute;
+  width:44px;height:19px;
+  border-radius:100% 0 100% 0;
+  background:linear-gradient(135deg,#739984,#3f6754);
+  transform-origin:0 50%;
+  opacity:.68;
+}
+.leaflet.l1{left:50%;bottom:95px;transform:rotate(-42deg)}
+.leaflet.l2{left:50%;bottom:113px;transform:rotate(28deg)}
+.leaflet.l3{left:50%;bottom:64px;transform:rotate(-58deg)}
+.leaflet.l4{left:50%;bottom:82px;transform:rotate(43deg)}
+.leaflet.l5{left:50%;bottom:38px;transform:rotate(-28deg)}
+body.day .leaflet{background:linear-gradient(135deg,#789c85,#4c735e)}
+
+/* ---------- birds / leaves / wind ---------- */
+.bird{z-index:5;opacity:.64;filter:drop-shadow(0 2px 4px rgba(0,0,0,.12))}
+.bird.fly{animation:birdFly var(--dur,24s) linear infinite}
+@keyframes birdFly{
+  0%{transform:translate3d(-8vw,var(--y),0) scale(var(--s,1));opacity:0}
+  9%{opacity:.62}
+  28%{transform:translate3d(27vw,calc(var(--y) - 14px),0) scale(var(--s,1))}
+  48%{transform:translate3d(50vw,calc(var(--y) + 12px),0) scale(var(--s,1))}
+  71%{transform:translate3d(75vw,calc(var(--y) - 7px),0) scale(var(--s,1))}
+  91%{opacity:.55}
+  100%{transform:translate3d(112vw,calc(var(--y) + 4px),0) scale(var(--s,1));opacity:0}
+}
+.bird.perch{animation:birdPerch 2.2s ease-in-out infinite alternate}
+@keyframes birdPerch{to{transform:translateY(-3px) rotate(-3deg)}}
+
+.wind{
+  height:1px;
+  width:140px;
+  background:linear-gradient(90deg,transparent,rgba(221,230,222,.22),transparent);
+  opacity:0;
+}
+body.day .wind{background:linear-gradient(90deg,transparent,rgba(78,105,91,.13),transparent)}
+@keyframes windMove{0%{transform:translateX(-180px) skewX(-12deg);opacity:0}15%{opacity:.25}70%{opacity:.12}100%{transform:translateX(115vw) skewX(-12deg);opacity:0}}
+
+.leaf{width:7px;height:12px;box-shadow:0 2px 7px rgba(0,0,0,.12);z-index:6}
+body.day .leaf{opacity:.52}
+body:not(.day) .leaf{opacity:.34}
+
+/* ---------- hero / command surface ---------- */
+.hero{
+  position:relative;
+  overflow:hidden;
+  min-height:180px;
+  padding:26px 28px;
+  margin-top:14px;
+  border-radius:30px;
+  border:1px solid var(--bd);
+  background:
+    linear-gradient(125deg,rgba(255,255,255,.075),rgba(255,255,255,.018) 50%,rgba(194,158,94,.035)),
+    var(--card2);
+  backdrop-filter:blur(28px) saturate(135%);
+  -webkit-backdrop-filter:blur(28px) saturate(135%);
+  box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.08);
+}
+.hero:before{
+  content:"";
+  position:absolute;
+  width:300px;height:300px;
+  right:-110px;top:-180px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,166,103,.15),transparent 65%);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  left:20%;right:20%;bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--b),transparent);
+  opacity:.35;
+}
+.hero-kicker{
+  color:var(--b);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  font-size:10px;
+  font-weight:700;
+}
+.hero-title{
+  margin:9px 0 7px;
+  max-width:720px;
+  font-size:clamp(24px,4vw,42px);
+  line-height:1.08;
+  letter-spacing:-.045em;
+  font-weight:650;
+}
+.hero-copy{max-width:650px;color:var(--mu);font-size:13px;line-height:1.65}
+.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hero-chip{
+  padding:7px 11px;border-radius:99px;
+  border:1px solid var(--bd);
+  background:rgba(255,255,255,.035);
+  color:var(--mu);
+  font-size:10px;
+}
+.hero-chip strong{color:var(--tx)}
+
+/* live status light */
+.live-dot{
+  display:inline-block;
+  width:7px;height:7px;border-radius:50%;
+  background:#81ad93;
+  box-shadow:0 0 0 0 rgba(129,173,147,.4);
+  animation:livePulse 2.2s infinite;
+  margin-right:6px;
+}
+@keyframes livePulse{60%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+/* ---------- theme control ---------- */
+.theme-switcher{
+  display:flex;
+  gap:4px;
+  padding:4px;
+  border:1px solid var(--bd);
+  border-radius:15px;
+  background:var(--glass);
+  backdrop-filter:blur(16px);
+}
+.theme-switcher button{
+  border:0;
+  background:transparent;
+  color:var(--mu);
+  padding:7px 10px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:11px;
+  transition:.22s;
+}
+.theme-switcher button:hover{color:var(--tx);background:rgba(255,255,255,.05)}
+.theme-switcher button.active{background:linear-gradient(135deg,var(--b),#d1b270);color:white}
+
+/* ---------- dashboard rhythm ---------- */
+.rhythm{
+  display:grid;
+  grid-template-columns:1.4fr .8fr .8fr;
+  gap:10px;
+  margin-top:12px;
+}
+.rhythm-card{
+  min-height:88px;
+  padding:15px 16px;
+  border:1px solid var(--bd);
+  border-radius:20px;
+  background:var(--card2);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  box-shadow:var(--softshadow);
+}
+.rhythm-label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--mu)}
+.rhythm-value{font-size:21px;font-weight:650;margin-top:7px}
+.rhythm-note{font-size:10px;color:var(--mu);margin-top:3px}
+.rhythm-line{height:4px;border-radius:99px;background:var(--gl);margin-top:10px;overflow:hidden}
+.rhythm-line i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--b));border-radius:99px}
+@media(max-width:760px){.rhythm{grid-template-columns:1fr 1fr}.rhythm-card:first-child{grid-column:1/-1}}
+@media(max-width:520px){.rhythm{grid-template-columns:1fr}.rhythm-card:first-child{grid-column:auto}}
+
+/* ---------- content cards ---------- */
+.card{
+  background:linear-gradient(145deg,var(--card),rgba(255,255,255,.012));
+  backdrop-filter:blur(26px) saturate(130%);
+  -webkit-backdrop-filter:blur(26px) saturate(130%);
+  border-color:var(--bd);
+  box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.055);
+}
+body.day .card{box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.62)}
+nav{background:rgba(255,255,255,.055);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:var(--softshadow)}
+body.day nav{background:rgba(255,255,255,.68)}
+nav button.on{background:linear-gradient(135deg,var(--b),#d0af70);box-shadow:0 8px 26px rgba(176,132,64,.20)}
+.btn.pri{background:linear-gradient(135deg,#a57b3c,#c5a05d);color:#fff}
+.dq{font-family:Georgia,serif;background:linear-gradient(110deg,rgba(255,255,255,.04),rgba(194,157,91,.045))}
+.st{background:rgba(255,255,255,.025);border-color:var(--bd)}
+.hb{background:rgba(255,255,255,.025);border-color:var(--bd)}
+.hb.done{background:linear-gradient(100deg,rgba(107,151,128,.23),rgba(193,161,93,.11));color:var(--tx);border-color:rgba(142,182,156,.42)}
+.bar{background:rgba(255,255,255,.07)}.bar i{background:linear-gradient(90deg,#688f7c,#c4a05e)}
+.tug{background:rgba(191,153,81,.18)}.tug i{background:linear-gradient(90deg,#6e927f,#b9904e)}
+.toast{background:#1e2722;color:#f4f0e7;box-shadow:0 18px 55px rgba(0,0,0,.30)}
+body.day .toast{background:#25322b}
+.modal{background:rgba(7,11,9,.68);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+
+/* pets become discreet companions, not cartoon mascots */
+#pets{z-index:11}.rp{filter:drop-shadow(0 12px 13px rgba(0,0,0,.20));transform-origin:center bottom;transition:filter .3s}.rp:hover{filter:drop-shadow(0 15px 18px rgba(0,0,0,.28)) brightness(1.04)}
+.rb2{background:rgba(24,30,27,.91);border:1px solid rgba(216,190,137,.18);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+body.day .rb2{background:rgba(252,251,246,.94);color:#27312c;border-color:rgba(47,65,56,.12)}
+
+/* interaction glow */
+.interaction-ring{
+  position:fixed;
+  width:18px;height:18px;
+  border:1px solid rgba(205,174,106,.65);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:50;
+  animation:clickRing .75s ease-out forwards;
+}
+@keyframes clickRing{to{transform:scale(4.5);opacity:0}}
+
+/* smooth entrance */
+main>.card,main>.g2,main>.row,.hero,.rhythm{animation:surfaceIn .65s cubic-bezier(.22,1,.36,1) both}
+@keyframes surfaceIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.ambient-orb,.mote,.bird,.leaf,.wind,.hero,main>.card,main>.g2,main>.row,.rhythm{animation:none!important}}
+
 </style></head><body>
 <div class="sky" id="sky"></div>
 <main id="app"></main><div class="toast" id="toast"></div>
@@ -276,20 +668,121 @@ return`<div class="card"><b>Profile</b><div class="row"><input class="hn" data-c
 ${R.length?'<b>Retired</b>'+R.map(h=>`<div class="row"><span class="hn mu">${esc(h.habit_name)}</span><button class="btn" data-a="restore" data-id="${h.id}">Restore</button></div>`).join(''):''}
 <p class="mu" style="font-size:12px">Renames keep old logs under the old name. Point changes and retiring apply from tomorrow, so history never changes.</p></div>
 <div class="card row" style="margin-top:14px"><button class="btn pri" data-a="json">Export My Data (JSON)</button><button class="btn" data-a="csv">Download CSV</button><button class="btn" data-a="reset">Reset today</button><button class="btn" data-a="out">Sign out</button></div>`}
-function shell(inner){return`<header class="top"><div><h1>HABIT BATTLE</h1><div class="sub">Two people. Different goals. One shared standard.</div></div><div class="clock" id="clk"></div></header>
-<nav>${[['home','Battle'],['weekly','Weekly'],['monthly','Monthly'],['all','All time'],['set','Settings']].map(([k,n])=>`<button class="${S.page==k?'on':''}" data-a="pg" data-p="${k}">${n}</button>`).join('')}</nav>${inner}`}
+function shell(inner){
+  const u=S.me?.id, t=u?day(u,S.date):{pct:0,xp:0}, st=u?stk(u):{c:0,b:0};
+  const theme=localStorage.th||'auto';
+  const h=new Date().getHours();
+  const greeting=h<5?'Still up?':h<12?'Good morning':h<17?'Good afternoon':h<22?'Good evening':'Slow down for the night';
+  const target=u?tg(u):80;
+  const remaining=Math.max(0,r1(target-t.pct));
+  const sceneText=t.perf?'You kept every promise today.':t.hit?'Your standard is holding. Keep the rhythm.':'One deliberate action can change the shape of this day.';
+  return`
+  <header class="top">
+    <div>
+      <h1>HABIT BATTLE</h1>
+      <div class="sub">Two people. Different goals. One shared standard.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <div class="clock" id="clk"></div>
+      <div class="theme-switcher" aria-label="Theme">
+        <button data-theme="auto" class="${theme==='auto'?'active':''}" title="Automatic theme">Auto</button>
+        <button data-theme="day" class="${theme==='day'?'active':''}" title="Light mode">Light</button>
+        <button data-theme="night" class="${theme==='night'?'active':''}" title="Dark mode">Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <nav>${[['home','Today'],['weekly','Weekly'],['monthly','Monthly'],['all','All time'],['set','Settings']].map(([k,n])=>`<button class="${S.page==k?'on':''}" data-a="pg" data-p="${k}">${n}</button>`).join('')}</nav>
+
+  <section class="hero">
+    <div class="hero-kicker"><span class="live-dot"></span>PRIVATE LIVING DASHBOARD · ${esc(greeting)}</div>
+    <div class="hero-title">${esc(sceneText)}</div>
+    <div class="hero-copy">A quiet place to build consistency — your progress stays visible, your standards stay yours, and the world around the dashboard keeps moving.</div>
+    <div class="hero-meta">
+      <span class="hero-chip"><strong>${r1(t.pct)}%</strong> completed today</span>
+      <span class="hero-chip"><strong>${t.xp}</strong> XP earned today</span>
+      <span class="hero-chip"><strong>${st.c} days</strong> current streak</span>
+      <span class="hero-chip">${remaining?`<strong>${remaining}%</strong> to target`:'<strong>Target reached</strong>'}</span>
+    </div>
+  </section>
+
+  <section class="rhythm">
+    <div class="rhythm-card">
+      <div class="rhythm-label">Today's rhythm</div>
+      <div class="rhythm-value">${t.perf?'Perfect day':t.hit?'On target':'In progress'}</div>
+      <div class="rhythm-note">${t.av?`${LC[u+'|'+S.date]||0} of ${live(u,S.date).length} habits completed`:'Add your first habit to begin'}</div>
+      <div class="rhythm-line"><i style="width:${Math.min(100,t.pct)}%"></i></div>
+    </div>
+    <div class="rhythm-card">
+      <div class="rhythm-label">Next milestone</div>
+      <div class="rhythm-value">${st.c<3?'3 days':st.c<7?'7 days':st.c<14?'14 days':'30 days'}</div>
+      <div class="rhythm-note">${st.c?`${Math.max(0,(st.c<3?3:st.c<7?7:st.c<14?14:30)-st.c)} days away`:'Start your streak today'}</div>
+    </div>
+    <div class="rhythm-card">
+      <div class="rhythm-label">Best streak</div>
+      <div class="rhythm-value">${st.b} days</div>
+      <div class="rhythm-note">Your personal benchmark</div>
+    </div>
+  </section>
+
+  ${inner}`;
+}
 function render(){$('#app').innerHTML=shell({home,weekly,monthly,all:alltime,set:settings}[S.page]());clock();roam();petsRefresh()}
 function clock(){const e=$('#clk');if(e)e.textContent=new Date().toLocaleString('en',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
-function theme(){const m=localStorage.th||'auto',h=new Date().getHours(),night=m=='night'||(m=='auto'&&(h<6||h>=18));document.body.classList.toggle('day',!night)}
+function theme(){const m=localStorage.th||'auto',h=new Date().getHours(),night=m=='night'||(m=='auto'&&(h<6||h>=18));document.body.classList.toggle('day',!night);document.documentElement.dataset.theme=m}
 function sky(){
-let s='';for(let i=0;i<60;i++)s+=`${Math.random()*100}vw ${Math.random()*100}vh #fff,`;
-const wind=Array.from({length:10},(_,i)=>`<i class="wind" style="top:${18+i*6}vh;animation-duration:${18+i*2.7}s;animation-delay:-${i*3.4}s"></i>`).join('');
-const leaves=Array.from({length:18},(_,i)=>`<i class="leaf" style="--x:${(Math.random()*100).toFixed(1)}vw;--dur:${(7+Math.random()*8).toFixed(1)}s;animation-delay:-${(Math.random()*12).toFixed(1)}s"></i>`).join('');
-const birds=Array.from({length:5},(_,i)=>`<div class="bird fly" style="--y:${12+i*9}vh;--dur:${22+i*5}s;--s:${.72+i*.08};animation-delay:-${i*6}s;color:${i%2?'#5b675f':'#47534d'}"><i class="wing w1"></i><i class="wing w2"></i></div>`).join('');
-const perched=`<div class="bird perch" style="left:8.2vw;bottom:205px;color:#3e4943"><i class="wing w1"></i><i class="wing w2"></i></div><div class="bird perch" style="right:9.5vw;bottom:222px;color:#3e4943;transform:scale(.82)"><i class="wing w1"></i><i class="wing w2"></i></div>`;
-const trees=`<div class="tree t1" data-tree="1"><i class="trunk"></i><i class="branch b1"></i><i class="branch b2"></i><i class="branch b3"></i><i class="canopy c1"></i><i class="canopy c2"></i><i class="canopy c3"></i></div><div class="tree t2" data-tree="2"><i class="trunk"></i><i class="branch b1"></i><i class="branch b2"></i><i class="branch b3"></i><i class="canopy c1"></i><i class="canopy c2"></i><i class="canopy c3"></i></div><div class="tree t3" data-tree="3"><i class="trunk"></i><i class="branch b1"></i><i class="branch b2"></i><i class="branch b3"></i><i class="canopy c1"></i><i class="canopy c2"></i><i class="canopy c3"></i></div><div class="tree t4" data-tree="4"><i class="trunk"></i><i class="branch b1"></i><i class="branch b2"></i><i class="branch b3"></i><i class="canopy c1"></i><i class="canopy c2"></i><i class="canopy c3"></i></div>`;
-$('#sky').innerHTML=`<div class="stars" style="box-shadow:${s.slice(0,-1)}"></div><div class="moon"></div><div class="sun"></div><div class="cl" style="top:14vh"></div><div class="cl" style="top:31vh;animation-delay:-42s"></div><div class="wind-layer">${wind}</div>${birds}${perched}${leaves}<div class="landscape">${trees}<div class="horizon"></div></div>`;
-document.querySelectorAll('[data-tree]').forEach(t=>t.addEventListener('click',treeInteract));
+  let s='';
+  for(let i=0;i<70;i++)s+=`${Math.random()*100}vw ${Math.random()*100}vh #fff,`;
+
+  const wind=Array.from({length:12},(_,i)=>
+    `<i class="wind" style="top:${15+i*5.8}vh;animation-duration:${19+i*2.1}s;animation-delay:-${i*2.7}s"></i>`
+  ).join('');
+
+  const leaves=Array.from({length:24},(_,i)=>
+    `<i class="leaf" style="--x:${(Math.random()*100).toFixed(1)}vw;--dur:${(8+Math.random()*9).toFixed(1)}s;animation-delay:-${(Math.random()*14).toFixed(1)}s"></i>`
+  ).join('');
+
+  const motes=Array.from({length:34},(_,i)=>
+    `<i class="mote" style="left:${(Math.random()*100).toFixed(1)}%;top:${(55+Math.random()*45).toFixed(1)}%;--dx:${(-80+Math.random()*160).toFixed(0)}px;--d:${(12+Math.random()*18).toFixed(1)}s;animation-delay:-${(Math.random()*18).toFixed(1)}s"></i>`
+  ).join('');
+
+  const orbs=`
+    <i class="ambient-orb" style="width:130px;height:130px;left:7%;top:22%;--x:18px;--y:-12px;--d:8s"></i>
+    <i class="ambient-orb" style="width:80px;height:80px;right:17%;top:34%;--x:-20px;--y:15px;--d:10s"></i>
+    <i class="ambient-orb" style="width:55px;height:55px;left:39%;top:18%;--x:12px;--y:20px;--d:7s"></i>`;
+
+  const birds=Array.from({length:7},(_,i)=>
+    `<div class="bird fly" style="--y:${10+i*8}vh;--dur:${24+i*4}s;--s:${.58+i*.08};animation-delay:-${i*5}s;color:${i%2?'#5a665f':'#424e48'}"><i class="wing w1"></i><i class="wing w2"></i></div>`
+  ).join('');
+
+  const perched=`
+    <div class="bird perch" style="left:9vw;bottom:246px;color:#46534c"><i class="wing w1"></i><i class="wing w2"></i></div>
+    <div class="bird perch" style="right:11vw;bottom:257px;color:#46534c;transform:scale(.8)"><i class="wing w1"></i><i class="wing w2"></i></div>`;
+
+  const botanicals=`
+    <div class="botanical left"><i class="stem"></i><i class="leaflet l1"></i><i class="leaflet l2"></i><i class="leaflet l3"></i><i class="leaflet l4"></i><i class="leaflet l5"></i></div>
+    <div class="botanical right"><i class="stem"></i><i class="leaflet l1"></i><i class="leaflet l2"></i><i class="leaflet l3"></i><i class="leaflet l4"></i><i class="leaflet l5"></i></div>`;
+
+  const trees=`
+    <div class="tree t1" data-tree="1"><i class="trunk"></i><i class="branch b1"></i><i class="branch b2"></i><i class="branch b3"></i><i class="canopy c1"></i><i class="canopy c2"></i><i class="canopy c3"></i></div>
+    <div class="tree t2" data-tree="2"><i class="trunk"></i><i class="branch b1"></i><i class="branch b2"></i><i class="branch b3"></i><i class="canopy c1"></i><i class="canopy c2"></i><i class="canopy c3"></i></div>`;
+
+  $('#sky').innerHTML=`
+    <div class="stars" style="box-shadow:${s.slice(0,-1)}"></div>
+    <div class="moon"></div><div class="sun"></div>
+    <div class="cl" style="top:13vh"></div>
+    <div class="cl" style="top:29vh;animation-delay:-46s"></div>
+    ${orbs}${motes}
+    <div class="wind-layer">${wind}</div>
+    ${birds}${perched}${leaves}
+    <div class="lux-scene">
+      <div class="scene-glow"></div>
+      <div class="hill h1"></div><div class="hill h2"></div>
+      ${botanicals}${trees}
+      <div class="grass"></div>
+    </div>`;
+
+  document.querySelectorAll('[data-tree]').forEach(t=>t.addEventListener('click',treeInteract));
 }
 function treeInteract(e){
 const t=e.currentTarget,r=t.getBoundingClientRect(),x=r.left+r.width*.5,y=r.top+r.height*.32;
@@ -302,6 +795,23 @@ function authView(){$('#app').innerHTML=`<h1>HABIT BATTLE</h1><div class="sub">T
 async function boot(){if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="card" style="margin:40px 0">Setup needed: paste your Supabase URL and anon key at the top of the script in index.html.</div>';return}
 sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data:{session}}=await sb.auth.getSession();if(!session)return authView();S.me=session.user;await load();
 if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render();weeklyCheck();goLive()}
+
+document.addEventListener('click',e=>{
+  const th=e.target.closest('[data-theme]');
+  if(th){
+    localStorage.th=th.dataset.theme;
+    theme();
+    render();
+    toast(th.dataset.theme==='night'?'Dark mode enabled':th.dataset.theme==='day'?'Light mode enabled':'Automatic theme enabled',1800);
+    return;
+  }
+  if(e.target.closest('button,.hb,.tree,.rp,.btn')){
+    const r=e.target.closest('button,.hb,.tree,.rp,.btn').getBoundingClientRect();
+    const q=document.createElement('i');q.className='interaction-ring';
+    q.style.left=(r.left+r.width/2-9)+'px';q.style.top=(r.top+r.height/2-9)+'px';
+    document.body.appendChild(q);setTimeout(()=>q.remove(),800);
+  }
+});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(el)act(el.dataset.a,el).catch(er=>toast('Error: '+er.message,9000))});
 document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(el)chg(el.dataset.c,el)});
 theme();sky();let lastT=T();setInterval(()=>{theme();clock();if(T()!=lastT){if(S.date==lastT)S.date=T();lastT=T();if(S.me){C={};render()}}},30000);setInterval(async()=>{if(S.me&&S.page=='home'&&!document.hidden){await load();render()}},30000);boot().catch(er=>toast('Error: '+er.message,9000));
