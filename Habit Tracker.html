@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Battle</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bg1:#0b1026;--bg2:#1b1f4b;--tx:#eef0ff;--mu:#9aa0c8;--gl:rgba(255,255,255,.07);--bd:rgba(255,255,255,.12);--a:#7c9cff;--b:#ff9f5a;--ok:#4ade80}
+body.day{--bg1:#6ab7ff;--bg2:#d8efff;--tx:#14213d;--mu:#46567a;--gl:rgba(255,255,255,.55);--bd:rgba(255,255,255,.8);--a:#3b5bdb;--b:#e8590c}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Sora,system-ui,sans-serif;color:var(--tx);background:linear-gradient(180deg,var(--bg1),var(--bg2));min-height:100vh;overflow-x:hidden;transition:background 1s}
+.sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.stars{position:absolute;width:2px;height:2px;border-radius:50%;animation:tw 4s infinite alternate}
+.moon{position:absolute;top:8vh;right:10vw;width:60px;height:60px;border-radius:50%;box-shadow:0 0 70px 20px rgba(200,210,255,.25),inset -14px 0 0 #dfe6ff;background:transparent}
+.sun{position:absolute;top:6vh;left:12vw;width:90px;height:90px;border-radius:50%;background:radial-gradient(#fff6c2,#ffd25e 60%,transparent 72%);box-shadow:0 0 90px 30px rgba(255,210,94,.5)}
+.cl{position:absolute;width:160px;height:44px;border-radius:44px;background:rgba(255,255,255,.8);filter:blur(2px);animation:dr 90s linear infinite}
+body:not(.day) .sun,body:not(.day) .cl{display:none}body.day .stars,body.day .moon{display:none}
+@keyframes tw{to{opacity:.3}}@keyframes dr{from{transform:translateX(-200px)}to{transform:translateX(110vw)}}
+main{position:relative;z-index:1;max-width:1000px;margin:auto;padding:16px}
+h1{margin:0;font-size:clamp(28px,6vw,44px);font-weight:800;letter-spacing:.02em}
+.sub{color:var(--mu);margin:2px 0 8px}.clock{color:var(--mu);font-size:13px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+button,input,select{font:inherit;color:inherit}
+nav button,.btn{background:var(--gl);border:1px solid var(--bd);border-radius:12px;padding:8px 14px;cursor:pointer;backdrop-filter:blur(12px)}
+nav button.on,.btn.pri{background:var(--a);color:#fff;border-color:transparent}
+button:focus-visible,input:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.card{background:var(--gl);border:1px solid var(--bd);border-radius:20px;padding:18px;backdrop-filter:blur(16px)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.pc h2{margin:0 0 4px}.pc.p0 h2{color:var(--a)}.pc.p1 h2{color:var(--b)}
+.ring{width:120px;height:120px;display:block;margin:8px auto}.rb{fill:none;stroke:var(--bd);stroke-width:10}.rf{fill:none;stroke:var(--a);stroke-width:10;stroke-linecap:round;transition:stroke-dasharray .8s}
+.p1 .rf{stroke:var(--b)}.ring text{fill:var(--tx);font-size:26px;font-weight:800;text-anchor:middle}
+.bar{height:10px;border-radius:9px;background:var(--bd);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--ok));transition:width .8s}
+.st{background:var(--gl);border:1px solid var(--bd);border-radius:12px;padding:8px;text-align:center;font-size:12px;color:var(--mu)}.st b{display:block;font-size:17px;color:var(--tx)}
+.win{text-align:center;margin:14px 0;font-size:18px;font-weight:600}
+.hb{display:flex;width:100%;align-items:center;gap:10px;margin:6px 0;padding:14px;border-radius:14px;border:1px solid var(--bd);background:var(--gl);cursor:pointer;text-align:left;min-height:52px;transition:transform .15s,background .3s}
+.hb:disabled{opacity:.7;cursor:default}.hb.done{background:rgba(74,222,128,.22);border-color:var(--ok)}.hb.done .ck{animation:pop .35s}
+.hb span.x{margin-left:auto;font-weight:600}.ck{font-size:20px}@keyframes pop{50%{transform:scale(1.5)}}
+table{width:100%;border-collapse:collapse}td,th{padding:7px;text-align:center;border-bottom:1px solid var(--bd)}td:first-child{text-align:left;color:var(--mu)}.lead{font-weight:800;color:var(--ok)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:var(--a);color:#fff;padding:14px 22px;border-radius:16px;z-index:9;max-width:90vw;text-align:center;transition:transform .4s}.toast.show{transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:10}.modal div{background:var(--bg1);color:#fff;padding:30px 40px;border-radius:24px;text-align:center;animation:pop .5s}
+.cf{position:fixed;top:-10px;width:9px;height:14px;z-index:11;animation:fall 1.8s ease-in forwards}@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.row{display:flex;gap:8px;align-items:center;margin:6px 0;flex-wrap:wrap}input,select{background:var(--gl);border:1px solid var(--bd);border-radius:10px;padding:8px;min-width:0}
+.hn{flex:1 1 140px}.pt{width:70px}.mu{color:var(--mu)}.bd{font-size:22px}
+.chart{width:100%;height:auto}.chart text{fill:var(--mu);font-size:11px;text-anchor:middle;font-family:Sora}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="sky" id="sky"></div>
+<main id="app"></main><div class="toast" id="toast"></div>
+<script>
+const SUPABASE_URL="https://vlqqzwarkcoctwdcvgts.supabase.co", SUPABASE_ANON_KEY="sb_publishable_90Pm5oDXDG9KSN9FoB_xZg_NZlya8Of";
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
+const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`,T=()=>fmt(new Date());
+const add=(s,n)=>{const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return fmt(d)};
+const mon=s=>add(s,-((new Date(s+'T12:00').getDay()+6)%7));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r1=n=>Math.round(n);
+let sb,S={me:null,P:[],H:[],L:[],A:[],date:T(),page:'home',wk:0,mo:0},C={},LD={},LC={},LI={};
+const QS={win:["One small win. Keep stacking.","Done. That's how it's built, brick by brick.","Another one down. Momentum is yours.","Small actions, repeated, become identity."],
+half:["Halfway there. Don't stop now.","50% in. The hard part is behind you.","Half the day's work is banked. Finish strong."],
+target:["Target hit. Now make consistency your unfair advantage.","Target reached. Show up tomorrow and it's a pattern.","You hit the number. That's discipline, not luck."],
+perfect:["Perfect day. You kept the promise you made to yourself.","100%. Nothing left on the table.","Flawless. This is what compounding looks like."],
+crown:["🏆 The crown is yours today. Defend it tomorrow.","🏆 You're in front. Keep your foot down.","🏆 Leading the battle. Don't let up."],
+lose:["One bad day is data, not identity.","Behind today, not beaten. Catch up.","Losses teach faster than wins."],
+miss:["Reset. Tomorrow is still yours.","Missed the target. Adjust, don't quit.","A missed day isn't a missed life. Come back tomorrow."]};
+const quote=k=>{let h=JSON.parse(localStorage.qh||'[]'),p=QS[k].filter(q=>!h.includes(q));if(!p.length)p=QS[k];const q=p[Math.floor(Math.random()*p.length)];localStorage.qh=JSON.stringify([...h,q].slice(-8));return q};
+const CH=["Complete your hardest task first.","Finish one deep-work session.","No social media for 60 minutes.","Complete all habits before 8 PM.","Read 10 extra pages.","Drink 3 litres of water.","Do 10 minutes of extra practice.","Plan tomorrow before bed."];
+const ACH={first:['🥉','First Step'],s3:['🔥','3-Day Streak'],s7:['🔥','7-Day Fire'],s14:['💎','Two Week Beast'],perfect:['👑','Perfect Day'],winner:['⚔️','Battle Winner'],xp1000:['🚀','1000 XP']};
+function toast(t,ms=3500){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),ms)}
+function confetti(n=30){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;for(let i=0;i<n;i++){const e=document.createElement('i');e.className='cf';e.style.left=Math.random()*100+'vw';e.style.background=`hsl(${Math.random()*360} 85% 60%)`;e.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),2600)}}
+// ---------- data ----------
+async function all(t,f=q=>q){let o=[],i=0;for(;;){const{data,error}=await f(sb.from(t).select('*')).order('id').range(i,i+999);if(error)throw error;o=o.concat(data);if(data.length<1000)return o;i+=1000}}
+async function load(){const[p,h,l,a]=await Promise.all([all('profiles'),all('habits'),all('daily_habit_logs',q=>q.eq('completed',true)),all('achievements')]);
+S.P=p.sort((x,y)=>x.created_at<y.created_at?-1:1);S.H=h.map(x=>({...x,c:fmt(new Date(x.created_at)),a:x.archived_at?fmt(new Date(x.archived_at)):null})).sort((x,y)=>x.sort-y.sort||(x.created_at<y.created_at?-1:1));S.L=l;S.A=a;idx()}
+function idx(){C={};LD={};LC={};LI={};S.L.forEach(l=>{const k=l.user_id+'|'+l.date;LD[k]=(LD[k]||0)+l.points_earned;LC[k]=(LC[k]||0)+1;LI[l.habit_id+'|'+l.date]=l})}
+// ---------- calculations (all from historical records) ----------
+const me=()=>S.P.find(p=>p.id==S.me.id),opp=u=>S.P.find(p=>p.id!=u),tg=u=>S.P.find(p=>p.id==u)?.daily_target||80;
+const live=(u,d)=>S.H.filter(h=>h.user_id==u&&h.c<=d&&(!h.a||h.a>d));
+function day(u,d){const av=live(u,d).reduce((s,h)=>s+h.points,0),e=LD[u+'|'+d]||0,pct=av?Math.min(100,e/av*100):0,hit=av>0&&pct>=tg(u),perf=av>0&&e>=av;return{av,e,pct,hit,perf,xp:e+(hit?10:0)+(perf?25:0)}}
+function ser(u){if(C[u])return C[u];const hs=S.H.filter(h=>h.user_id==u),o=[];if(hs.length){let d=hs.map(h=>h.c).sort()[0];const t=T();for(;d<=t;d=add(d,1))o.push({d,...day(u,d)})}return C[u]=o}
+const xpT=u=>ser(u).reduce((s,x)=>s+x.xp,0);
+function stk(u){const s=ser(u);let b=0,r=0;s.forEach(x=>{r=x.hit?r+1:0;b=Math.max(b,r)});let c=0,i=s.length-1;if(i>=0&&!s[i].hit)i--;for(;i>=0&&s[i].hit;i--)c++;return{c,b}}
+const need=l=>l<=1?0:l<=5?[0,0,100,250,500,1000][l]:1000+(l-5)*1000;
+function lv(x){let l=1;while(x>=need(l+1))l++;return{l,p:(x-need(l))/(need(l+1)-need(l))*100,left:need(l+1)-x}}
+const fire=n=>n>=100?'🏆':n>=60?'💎':n>=30?'👑':n>=14?'🔥🔥🔥':n>=7?'🔥🔥':n>=3?'🔥':'';
+function hperf(u,f,t){const td=T(),o=[];S.H.filter(h=>h.user_id==u).forEach(h=>{let n=0,k=0;for(let d=f;d<=t&&d<=td;d=add(d,1))if(h.c<=d&&(!h.a||h.a>d)){n++;if(LI[h.id+'|'+d])k++}if(n)o.push({name:h.habit_name,pct:k/n*100})});return o.sort((a,b)=>b.pct-a.pct)}
+function per(u,f,t){const O=opp(u),td=T(),ds=[];for(let d=f;d<=t&&d<=td;d=add(d,1))ds.push({d,...day(u,d)});const act=ds.filter(x=>x.av>0);
+let r=0,b=0;ds.forEach(x=>{r=x.hit?r+1:0;b=Math.max(b,r)});
+return{ds,avg:act.length?act.reduce((s,x)=>s+x.pct,0)/act.length:0,xp:ds.reduce((s,x)=>s+x.xp,0),perf:ds.filter(x=>x.perf).length,best:b,
+wins:O?ds.filter(x=>x.av>0&&x.pct>day(O.id,x.d).pct).length:0,done:ds.reduce((s,x)=>s+(LC[u+'|'+x.d]||0),0),hp:hperf(u,f,t)}}
+// ---------- achievements ----------
+async function checkAch(){const u=S.me.id,s=ser(u),st=stk(u),o=opp(u),have=new Set(S.A.filter(a=>a.user_id==u).map(a=>a.achievement_type));
+const ok={first:S.L.some(l=>l.user_id==u),s3:st.b>=3,s7:st.b>=7,s14:st.b>=14,perfect:s.some(x=>x.perf),winner:!!o&&s.some(x=>x.d<T()&&x.av>0&&x.pct>day(o.id,x.d).pct),xp1000:xpT(u)>=1000};
+for(const k in ok)if(ok[k]&&!have.has(k)){const{error}=await sb.from('achievements').insert({user_id:u,achievement_type:k});if(!error){S.A.push({user_id:u,achievement_type:k});
+const m=document.createElement('div');m.className='modal';m.innerHTML=`<div><div style="font-size:64px">${ACH[k][0]}</div><h2>Achievement unlocked</h2><p>${ACH[k][1]}</p></div>`;m.onclick=()=>m.remove();document.body.appendChild(m);confetti(40)}}}
+// ---------- actions ----------
+async function tog(id){const h=S.H.find(x=>x.id==id);if(!h||h.user_id!=S.me.id)return;const d=S.date,u=S.me.id,had=LI[id+'|'+d],b=day(u,d),ob=opp(u)?day(opp(u).id,d):{pct:0};
+if(had){const{error}=await sb.from('daily_habit_logs').delete().eq('id',had.id);if(error)return toast(error.message);S.L=S.L.filter(l=>l.id!=had.id)}
+else{const{data,error}=await sb.from('daily_habit_logs').upsert({user_id:u,habit_id:id,date:d,habit_name:h.habit_name,completed:true,completed_at:new Date().toISOString(),points_earned:h.points},{onConflict:'habit_id,date'}).select().single();if(error)return toast(error.message);S.L.push(data)}
+idx();render();if(!had){const a=day(u,d);let k='win';
+if(a.perf&&!b.perf){k='perfect';confetti(90)}else if(a.hit&&!b.hit){k='target';confetti(45);toast('🎉 TARGET HIT  +10 XP · '+quote(k),5000);checkAch();return}
+else if(opp(u)&&a.pct>ob.pct&&b.pct<=ob.pct)k='crown';else if(a.pct>=50&&b.pct<50)k='half';
+toast((k=='perfect'?'👑 PERFECT DAY  +25 XP · ':'')+quote(k),5000);checkAch()}}
+async function act(a,el){const u=S.me?.id;
+if(a=='tog')return tog(el.dataset.id);
+if(a=='prev'||a=='next'){S.date=add(S.date,a=='prev'?-1:1);return render()}
+if(a=='today'){S.date=T();return render()}
+if(a=='pg'){S.page=el.dataset.p;return render()}
+if(a=='wk'||a=='mo'){S[a]+=+el.dataset.n;return render()}
+if(a=='google'){const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)toast(error.message,9000);return}
+if(a=='signin'||a=='signup'){const e=$('#em').value,p=$('#pw').value,n=($('#nm').value||'').trim();
+if(a=='signup'){if(!n)return toast('Enter your name first.');const{data,error}=await sb.auth.signUp({email:e,password:p,options:{data:{name:n}}});if(error)return toast(error.message,9000);if(!data.session)return toast('Account created. Confirm via the email Supabase sent, then sign in.',9000)}
+else{const{error}=await sb.auth.signInWithPassword({email:e,password:p});if(error)return toast(error.message)}
+return boot()}
+if(a=='out'){await sb.auth.signOut();return boot()}
+if(a=='add'){const n=$('#nn').value.trim().slice(0,60),p=Math.max(1,Math.min(100,+$('#np').value||10));if(!n)return;const m=S.H.filter(h=>h.user_id==u).length;await sb.from('habits').insert({user_id:u,habit_name:n,points:p,sort:m})}
+if(a=='up'||a=='dn'){const L=S.H.filter(h=>h.user_id==u&&h.active&&!h.a),i=L.findIndex(h=>h.id==el.dataset.id),j=a=='up'?i-1:i+1;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];await Promise.all(L.map((h,k)=>sb.from('habits').update({sort:k}).eq('id',h.id)))}
+if(a=='retire'||a=='restore'){const h=S.H.find(x=>x.id==el.dataset.id),tm=new Date(add(T(),1)+'T00:00:00').toISOString();
+if(a=='retire')await sb.from('habits').update({active:false,archived_at:tm}).eq('id',h.id);
+else await sb.from('habits').insert({user_id:u,habit_name:h.habit_name,points:h.points,sort:99,created_at:tm})}
+if(a=='reset'){if(!confirm("Clear today's ticks?"))return;await sb.from('daily_habit_logs').delete().eq('user_id',u).eq('date',T())}
+if(a=='json')return dl('habit-battle.json',JSON.stringify({profiles:S.P,habits:S.H.map(({c,a,...h})=>h),logs:S.L,achievements:S.A},null,1),'application/json');
+if(a=='csv'){const nm=id=>S.P.find(p=>p.id==id)?.name;return dl('habit-battle-logs.csv','date,player,habit,points,completed_at\n'+S.L.map(l=>[l.date,nm(l.user_id),`"${l.habit_name.replace(/"/g,'""')}"`,l.points_earned,l.completed_at].join(',')).join('\n'),'text/csv')}
+await load();render()}
+function dl(n,t,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click()}
+async function chg(c,el){const u=S.me.id,id=el.dataset.id;
+if(c=='name')await sb.from('habits').update({habit_name:el.value.trim().slice(0,60)||'Habit'}).eq('id',id);   // old logs keep their snapshot name
+if(c=='pts'){const h=S.H.find(x=>x.id==id),p=Math.max(1,Math.min(100,+el.value||h.points));if(p==h.points)return;const tm=new Date(add(T(),1)+'T00:00:00').toISOString();   // new points apply from tomorrow; history stays intact
+await sb.from('habits').update({archived_at:tm}).eq('id',id);await sb.from('habits').insert({user_id:u,habit_name:h.habit_name,points:p,sort:h.sort,created_at:tm});toast('New points apply from tomorrow.')}
+if(c=='pname')await sb.from('profiles').update({name:el.value.trim().slice(0,30)||'Player'}).eq('id',u);
+if(c=='tgt')await sb.from('profiles').update({daily_target:Math.max(1,Math.min(100,+el.value||80))}).eq('id',u);
+if(c=='theme'){localStorage.th=el.value;theme()}
+await load();render()}
+// ---------- views ----------
+const bar=p=>`<div class="bar"><i style="width:${p}%"></i></div>`;
+function chart(lb,A,B){const W=700,H=200,g=W/lb.length;let s=`<svg class="chart" viewBox="0 0 ${W} ${H+24}">`;lb.forEach((l,i)=>{const x=i*g+g/2;[[A[i],-13,'var(--a)'],[B[i],3,'var(--b)']].forEach(([v,o,c])=>{const h=(v||0)*H/100;s+=`<rect x="${x+o}" y="${H-h}" width="12" height="${h}" rx="3" fill="${c}"/>`});s+=`<text x="${x}" y="${H+16}">${l}</text>`});return s+'</svg>'}
+function card(p,i){const u=p.id,t=day(u,S.date),x=xpT(u),L=lv(x),k=stk(u),tgt=tg(u),R=52,Cc=2*Math.PI*R,o=opp(u),ox=o?xpT(o.id):0,ot=o?day(o.id,S.date):{pct:0};
+const wk=per(u,mon(T()),T()).xp,d=new Date(),mo=per(u,fmt(new Date(d.getFullYear(),d.getMonth(),1)),T()).xp,rank=(t.pct>ot.pct||(t.pct==ot.pct&&x>=ox))?'🥇 #1':'🥈 #2';
+const badges=S.A.filter(a=>a.user_id==u).map(a=>`<span class="bd" title="${ACH[a.achievement_type]?.[1]}">${ACH[a.achievement_type]?.[0]||'🏅'}</span>`).join('');
+const msg=t.perf?'👑 PERFECT DAY':t.hit?'🎉 TARGET HIT':`${r1(tgt-t.pct)}% away from today's target`;
+return`<div class="card pc p${i}"><h2>${esc(p.name)} ${fire(k.c)}</h2><span class="mu">Level ${L.l} · ${x} XP</span>${bar(L.p)}<div class="mu" style="font-size:12px">${L.left} XP to next level</div>
+<svg class="ring" viewBox="0 0 120 120"><circle class="rb" cx="60" cy="60" r="${R}"/><circle class="rf" cx="60" cy="60" r="${R}" transform="rotate(-90 60 60)" style="stroke-dasharray:${Cc*t.pct/100} ${Cc}"/><text x="60" y="68">${r1(t.pct)}%</text></svg>
+<div style="text-align:center;font-weight:600">${msg}</div>
+<div class="g3"><div class="st"><b>${t.xp}</b>today XP</div><div class="st"><b>${k.c}d</b>streak</div><div class="st"><b>${k.b}d</b>best</div><div class="st"><b>${wk}</b>week XP</div><div class="st"><b>${mo}</b>month XP</div><div class="st"><b>${rank}</b>rank</div></div><div style="margin-top:8px">${badges}</div></div>`}
+function home(){const[p0,p1]=S.P,u=S.me.id,d=S.date;let w='⚔️ Waiting for the second player to join';
+if(p1){const a=day(p0.id,d),b=day(p1.id,d),df=Math.abs(a.pct-b.pct);const nm=a.pct>b.pct?p0.name:p1.name;
+w=!a.e&&!b.e?'🏁 Battle not started yet':df<.05?'🤝 It\'s a draw':`${esc(nm)} is leading by ${r1(df)}% (${Math.abs(a.xp-b.xp)} XP)`;
+const m=day(u,d),o=day(opp(u).id,d);if(m.pct<o.pct&&m.av)w+=`<div class="mu" style="font-size:14px">You need ${Math.ceil((o.pct-m.pct)/100*m.av+1)} more points to take the lead</div>`}
+const rows=[['Completion today',x=>r1(day(x,d).pct)+'%',x=>day(x,d).pct],['Lifetime XP',xpT,xpT],['Perfect days',x=>ser(x).filter(y=>y.perf).length,x=>ser(x).filter(y=>y.perf).length],['Current streak',x=>stk(x).c,x=>stk(x).c],['Best streak',x=>stk(x).b,x=>stk(x).b],['Week XP',x=>per(x,mon(T()),T()).xp,x=>per(x,mon(T()),T()).xp]];
+const lb=p1?`<div class="card" style="margin-top:14px"><b>🏆 Leaderboard</b><table><tr><th></th><th>${esc(p0.name)}</th><th>${esc(p1.name)}</th></tr>${rows.map(([n,f,v])=>{const a=v(p0.id),b=v(p1.id);return`<tr><td>${n}</td><td class="${a>b?'lead':''}">${f(p0.id)}</td><td class="${b>a?'lead':''}">${f(p1.id)}</td></tr>`}).join('')}</table></div>`:'';
+const col=(p,i)=>{if(!p)return'';const hs=live(p.id,d),mine=p.id==u,t=day(p.id,d);return`<div class="card"><b>${esc(p.name)}</b> <span class="mu">${t.e}/${t.av} XP</span>${bar(t.pct)}${hs.length?hs.map(h=>`<button class="hb ${LI[h.id+'|'+d]?'done':''}" data-a="tog" data-id="${h.id}" ${mine?'':'disabled'}><span class="ck">${LI[h.id+'|'+d]?'✅':'☐'}</span>${esc(h.habit_name)}<span class="x">+${h.points} XP</span></button>`).join(''):'<p class="mu">No habits yet. Add some in Settings.</p>'}</div>`};
+const ch=CH[[...d].reduce((s,c)=>s+c.charCodeAt(0),0)%CH.length];
+return`<div class="win card">🏆 WHO IS WINNING?<br>${w}</div><div class="g2">${S.P.map(card).join('')}</div>${lb}
+<div class="card" style="margin-top:14px"><b>⚡ Today's bonus</b> <span class="mu">${ch}</span></div>
+<div class="row" style="justify-content:center;margin-top:16px"><button class="btn" data-a="prev">← Previous day</button><button class="btn pri" data-a="today">${d==T()?'TODAY':d}</button><button class="btn" data-a="next">Next day →</button></div><div class="g2">${col(p0)}${col(p1)}</div>`}
+function analysis(u,r){const n=esc(opp(opp(u).id).name);if(!r.ds.length)return'';const b=r.hp[0],w=r.hp[r.hp.length-1];return`${n} had ${r.avg>=80?'a strong':r.avg>=60?'a solid':'a tough'} period at ${r1(r.avg)}%${b?`, strongest in ${esc(b.name)} (${r1(b.pct)}%)`:''}${w&&w!=b?`, weakest in ${esc(w.name)} (${r1(w.pct)}%)`:''}.`}
+function pblock(p,r){return`<div class="card"><h3>${esc(p.name)}</h3><div class="g3"><div class="st"><b>${r1(r.avg)}%</b>avg</div><div class="st"><b>${r.xp}</b>XP</div><div class="st"><b>${r.perf}</b>perfect</div><div class="st"><b>${r.best}</b>best streak</div><div class="st"><b>${r.wins}</b>daily wins</div><div class="st"><b>${r.done}</b>done</div></div>
+<div style="margin-top:10px">${r.hp.map(h=>`<div class="row" style="margin:3px 0"><span style="flex:1">${esc(h.name)}</span><b>${r1(h.pct)}%</b></div>${bar(h.pct)}`).join('')||'<span class="mu">No data</span>'}</div></div>`}
+function report(f,t,title,labels,buckets,nav){const[p0,p1]=S.P;if(!p1)return'<div class="card">Waiting for the second player.</div>';const a=per(p0.id,f,t),b=per(p1.id,f,t);
+const ser0=buckets.map(([x,y])=>per(p0.id,x,y).avg),ser1=buckets.map(([x,y])=>per(p1.id,x,y).avg);
+const ch=r1(a.avg)==r1(b.avg)?'🤝 Draw':'🏆 '+esc((a.avg>b.avg?p0:p1).name);
+return`<div class="row" style="justify-content:center"><button class="btn" data-a="${nav}" data-n="-1">←</button><b>${title}</b><button class="btn" data-a="${nav}" data-n="1">→</button></div>
+<div class="g2">${pblock(p0,a)}${pblock(p1,b)}</div><div class="card win" style="margin-top:14px">${nav=='wk'?'WEEKLY':'MONTHLY'} CHAMPION: ${ch}</div>
+<div class="card">${chart(labels,ser0,ser1)}<div class="mu" style="text-align:center;font-size:12px">${esc(p0.name)} (blue) vs ${esc(p1.name)} (orange), completion %</div><p>${analysis(p1.id,a)} ${analysis(p0.id,b)}</p></div>`}
+function weekly(){const s=add(mon(T()),7*S.wk),e=add(s,6),dt=x=>new Date(x+'T12:00').toLocaleDateString('en',{month:'short',day:'numeric'});
+return report(s,e,`${dt(s)} – ${dt(e)}`,['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],[0,1,2,3,4,5,6].map(i=>[add(s,i),add(s,i)]),'wk')}
+function monthly(){const n=new Date(),f0=new Date(n.getFullYear(),n.getMonth()+S.mo,1),f=fmt(f0),e=fmt(new Date(f0.getFullYear(),f0.getMonth()+1,0)),y=f.slice(0,8);
+return report(f,e,f0.toLocaleDateString('en',{month:'long',year:'numeric'}),['Week 1','Week 2','Week 3','Week 4'],[[y+'01',y+'07'],[y+'08',y+'14'],[y+'15',y+'21'],[y+'22',e]],'mo')}
+function alltime(){const[p0,p1]=S.P;if(!p1)return'<div class="card">Waiting for the second player.</div>';const f=S.H.map(h=>h.c).sort()[0]||T(),a=per(p0.id,f,T()),b=per(p1.id,f,T());
+const L=(p,r)=>{const x=xpT(p.id),l=lv(x);return`<div class="card"><h3>${esc(p.name)}</h3><div class="g3"><div class="st"><b>${x}</b>total XP</div><div class="st"><b>Lv ${l.l}</b>level</div><div class="st"><b>${r.done}</b>habits done</div><div class="st"><b>${r.perf}</b>perfect days</div><div class="st"><b>${r.best}</b>longest streak</div><div class="st"><b>${r1(r.avg)}%</b>avg</div></div></div>`};
+return`<div class="g2">${L(p0,a)}${L(p1,b)}</div><div class="card win" style="margin-top:14px">⚔️ Days won<br>${esc(p0.name)} — ${a.wins} · ${esc(p1.name)} — ${b.wins} · Draws — ${a.ds.filter(x=>x.av>0&&r1(x.pct)==r1(day(p1.id,x.d).pct)).length}</div>`}
+function settings(){const u=S.me.id,m=me(),mine=S.H.filter(h=>h.user_id==u),L=mine.filter(h=>h.active&&!h.a),R=mine.filter(h=>!h.active);
+return`<div class="card"><b>Profile</b><div class="row"><input class="hn" data-c="pname" value="${esc(m.name)}" maxlength="30" aria-label="Name"><label>Daily target % <input class="pt" type="number" min="1" max="100" data-c="tgt" value="${m.daily_target}"></label>
+<label>Theme <select data-c="theme">${['auto','day','night'].map(x=>`<option ${((localStorage.th||'auto')==x)?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
+<div class="card" style="margin-top:14px"><b>My habits</b>${L.map(h=>`<div class="row"><input class="hn" data-c="name" data-id="${h.id}" value="${esc(h.habit_name)}" maxlength="60"><input class="pt" type="number" min="1" max="100" data-c="pts" data-id="${h.id}" value="${h.points}"><button class="btn" data-a="up" data-id="${h.id}">↑</button><button class="btn" data-a="dn" data-id="${h.id}">↓</button><button class="btn" data-a="retire" data-id="${h.id}">Retire</button></div>`).join('')}
+<div class="row"><input class="hn" id="nn" placeholder="New habit" maxlength="60"><input class="pt" id="np" type="number" value="10" min="1" max="100"><button class="btn pri" data-a="add">Add habit</button></div>
+${R.length?'<b>Retired</b>'+R.map(h=>`<div class="row"><span class="hn mu">${esc(h.habit_name)}</span><button class="btn" data-a="restore" data-id="${h.id}">Restore</button></div>`).join(''):''}
+<p class="mu" style="font-size:12px">Renames keep old logs under the old name. Point changes and retiring apply from tomorrow, so history never changes.</p></div>
+<div class="card row" style="margin-top:14px"><button class="btn pri" data-a="json">Export My Data (JSON)</button><button class="btn" data-a="csv">Download CSV</button><button class="btn" data-a="reset">Reset today</button><button class="btn" data-a="out">Sign out</button></div>`}
+function shell(inner){return`<h1>⚔️ HABIT BATTLE</h1><div class="sub">Different goals. Same battlefield.</div><div class="clock" id="clk"></div>
+<nav>${[['home','Battle'],['weekly','Weekly'],['monthly','Monthly'],['all','All time'],['set','Settings']].map(([k,n])=>`<button class="${S.page==k?'on':''}" data-a="pg" data-p="${k}">${n}</button>`).join('')}</nav>${inner}`}
+function render(){$('#app').innerHTML=shell({home,weekly,monthly,all:alltime,set:settings}[S.page]());clock()}
+function clock(){const e=$('#clk');if(e)e.textContent=new Date().toLocaleString('en',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
+function theme(){const m=localStorage.th||'auto',h=new Date().getHours(),night=m=='night'||(m=='auto'&&(h<6||h>=18));document.body.classList.toggle('day',!night)}
+function sky(){let s='';for(let i=0;i<60;i++)s+=`${Math.random()*100}vw ${Math.random()*100}vh #fff,`;$('#sky').innerHTML=`<div class="stars" style="box-shadow:${s.slice(0,-1)}"></div><div class="moon"></div><div class="sun"></div><div class="cl" style="top:14vh"></div><div class="cl" style="top:30vh;animation-delay:-40s"></div>`}
+function authView(){$('#app').innerHTML=`<h1>⚔️ HABIT BATTLE</h1><div class="sub">Different goals. Same battlefield.</div><div class="card" style="max-width:380px;margin:30px auto"><div class="row"><input class="hn" id="nm" placeholder="Name (sign up only)" maxlength="30"></div><div class="row"><input class="hn" id="em" type="email" placeholder="Email"></div><div class="row"><input class="hn" id="pw" type="password" placeholder="Password (min 6)"></div><div class="row"><button class="btn pri" data-a="signin">Sign in</button><button class="btn" data-a="signup">Create account</button></div><div class="row"><button class="btn pri" data-a="google" style="width:100%">Continue with Google</button></div></div>`}
+async function boot(){if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="card" style="margin:40px 0">Setup needed: paste your Supabase URL and anon key at the top of the script in index.html.</div>';return}
+sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data:{session}}=await sb.auth.getSession();if(!session)return authView();S.me=session.user;await load();
+if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render()}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(el)act(el.dataset.a,el).catch(er=>toast('Error: '+er.message,9000))});
+document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(el)chg(el.dataset.c,el)});
+theme();sky();setInterval(()=>{theme();clock()},30000);setInterval(async()=>{if(S.me&&S.page=='home'&&!document.hidden){await load();render()}},30000);boot().catch(er=>toast('Error: '+er.message,9000));
+</script></body></html>
