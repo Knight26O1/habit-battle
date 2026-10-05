@@ -44,6 +44,15 @@ table{width:100%;border-collapse:collapse}td,th{padding:7px;text-align:center;bo
 .row{display:flex;gap:8px;align-items:center;margin:6px 0;flex-wrap:wrap}input,select{background:var(--gl);border:1px solid var(--bd);border-radius:10px;padding:8px;min-width:0}
 .hn{flex:1 1 140px}.pt{width:70px}.mu{color:var(--mu)}.bd{font-size:22px}
 .chart{width:100%;height:auto}.chart text{fill:var(--mu);font-size:11px;text-anchor:middle;font-family:Sora}
+.dq{text-align:center;font-size:17px;font-weight:600;margin-bottom:14px}.dq small{display:block;color:var(--mu);font-weight:400;font-size:12px;margin-top:4px}
+.tug{height:14px;border-radius:9px;background:var(--b);overflow:hidden;margin:10px 0 0}.tug i{display:block;height:100%;background:var(--a);transition:width .8s}
+.pets{display:flex;align-items:flex-end;justify-content:center;gap:18px;flex-wrap:wrap}.pet{cursor:pointer;text-align:center;width:170px;transition:transform .2s}.pet:hover{transform:scale(1.06)}
+.pet svg{width:96px;height:96px}.bub{background:var(--gl);border:1px solid var(--bd);border-radius:14px;padding:8px 10px;font-size:13px;margin-bottom:6px}
+.pet.push svg,.pet.sad svg{animation:bob 2.4s ease-in-out infinite}.pet.happy svg{animation:jump .7s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) rotate(-3deg)}}@keyframes jump{50%{transform:translateY(-14px)}}
+.fx{position:fixed;z-index:12;font-weight:800;font-size:20px;color:var(--ok);pointer-events:none;animation:up 1s forwards}@keyframes up{to{transform:translateY(-70px);opacity:0}}
+.hb:hover:not(:disabled){transform:translateX(4px)}.pc{transition:transform .2s}.pc:hover{transform:translateY(-3px)}
+.trophy{display:block;font-size:90px;animation:pop .8s,jump 1.2s .8s infinite}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <div class="sky" id="sky"></div>
@@ -95,7 +104,8 @@ const ok={first:S.L.some(l=>l.user_id==u),s3:st.b>=3,s7:st.b>=7,s14:st.b>=14,per
 for(const k in ok)if(ok[k]&&!have.has(k)){const{error}=await sb.from('achievements').insert({user_id:u,achievement_type:k});if(!error){S.A.push({user_id:u,achievement_type:k});
 const m=document.createElement('div');m.className='modal';m.innerHTML=`<div><div style="font-size:64px">${ACH[k][0]}</div><h2>Achievement unlocked</h2><p>${ACH[k][1]}</p></div>`;m.onclick=()=>m.remove();document.body.appendChild(m);confetti(40)}}}
 // ---------- actions ----------
-async function tog(id){const h=S.H.find(x=>x.id==id);if(!h||h.user_id!=S.me.id)return;const d=S.date,u=S.me.id,had=LI[id+'|'+d],b=day(u,d),ob=opp(u)?day(opp(u).id,d):{pct:0};
+async function tog(id){const h=S.H.find(x=>x.id==id);if(!h||h.user_id!=S.me.id)return;
+const bt=document.querySelector(`[data-id="${id}"]`);if(bt&&!LI[id+'|'+S.date]){const r=bt.getBoundingClientRect(),fx=document.createElement('div');fx.className='fx';fx.textContent='+'+h.points+' XP';fx.style.left=r.right-90+'px';fx.style.top=r.top+'px';document.body.appendChild(fx);setTimeout(()=>fx.remove(),1000)}const d=S.date,u=S.me.id,had=LI[id+'|'+d],b=day(u,d),ob=opp(u)?day(opp(u).id,d):{pct:0};
 if(had){const{error}=await sb.from('daily_habit_logs').delete().eq('id',had.id);if(error)return toast(error.message);S.L=S.L.filter(l=>l.id!=had.id)}
 else{const{data,error}=await sb.from('daily_habit_logs').upsert({user_id:u,habit_id:id,date:d,habit_name:h.habit_name,completed:true,completed_at:new Date().toISOString(),points_earned:h.points},{onConflict:'habit_id,date'}).select().single();if(error)return toast(error.message);S.L.push(data)}
 idx();render();if(!had){const a=day(u,d);let k='win';
@@ -104,6 +114,7 @@ else if(opp(u)&&a.pct>ob.pct&&b.pct<=ob.pct)k='crown';else if(a.pct>=50&&b.pct<5
 toast((k=='perfect'?'👑 PERFECT DAY  +25 XP · ':'')+quote(k),5000);checkAch()}}
 async function act(a,el){const u=S.me?.id;
 if(a=='tog')return tog(el.dataset.id);
+if(a=='pet'){const L=PL[el.dataset.m][el.dataset.k];return toast(L[Math.floor(Math.random()*L.length)].replace('{n}',r1(tg(u)-day(u,S.date).pct)),3000)}
 if(a=='prev'||a=='next'){S.date=add(S.date,a=='prev'?-1:1);return render()}
 if(a=='today'){S.date=T();return render()}
 if(a=='pg'){S.page=el.dataset.p;return render()}
@@ -132,6 +143,23 @@ if(c=='pname')await sb.from('profiles').update({name:el.value.trim().slice(0,30)
 if(c=='tgt')await sb.from('profiles').update({daily_target:Math.max(1,Math.min(100,+el.value||80))}).eq('id',u);
 if(c=='theme'){localStorage.th=el.value;theme()}
 await load();render()}
+const PRE=[['🏋️ Gym',20],['📚 Study',20],['💼 Freelancing',20],['📖 Read a book daily',10],['😴 Sleep 8 hours',15],['🥗 Eat healthy',15],['💧 Drink water',5],['🧘 Meditate',10],['🚶 10,000 steps',10],['✍️ English practice',10],['💻 Skill learning',20],['📵 No social media for 1 hour',10]];
+const DQ=["Show up first. Motivation shows up later.","Small habits, repeated daily, build big lives.","You don't need a perfect day, just a completed one.","Your future self is watching what you do today.","Discipline is choosing what you want most over what you want now.","Progress is quiet. Keep going anyway.","Be the person your goals need.","Done beats perfect, and consistent beats both.","Every tick is a vote for who you're becoming.","Rest if you must. Don't quit.","Start with the hardest habit. The rest feels easy.","A rival makes you sharper. A friend makes it fun.","Today's effort is tomorrow's streak.","Don't break the chain.","You're one habit away from a better day.","Energy follows action.","Win the morning, win the battle.","Consistency is the real talent.","Be a little better than yesterday.","The crown goes to the one who shows up again."];
+const dq=()=>`<div class="card dq">“${DQ[Math.floor(new Date(T()+'T12:00')/864e5)%DQ.length]}”<small>Today's quote · changes every day</small></div>`;
+const PL={happy:{cat:["Purr... target crushed! 😻","Look at you go! 🐾"],dog:["Woof! Best human ever! 🐶","That's my champion! 🎾"]},
+push:{cat:["Meow... {n}% to go. Tiny steps count 🐾","I'm watching. Do one habit now 😼"],dog:["Woof! {n}% to go, you can do it! 🐕","Let's go, let's go, let's go!"]},
+sad:{cat:["Meow... target missed. Tomorrow is a fresh bowl 🐱","One bad day isn't you. Reset."],dog:["Whimper... but I still believe in you! 🐶","Shake it off. Tomorrow we run!"]}};
+function face(k,m){const c=k=='cat'?'#f4a259':'#d9a066',mo=m=='happy'?'M38 66q10 10 20 0':m=='sad'?'M38 72q10-9 20 0':'M40 68h16';
+return`<svg viewBox="0 0 96 96">${k=='cat'?`<path d="M16 40L20 8l22 18zM80 40L76 8 54 26z" fill="${c}"/>`:`<ellipse cx="14" cy="46" rx="11" ry="22" fill="#9a6a3a"/><ellipse cx="82" cy="46" rx="11" ry="22" fill="#9a6a3a"/>`}<circle cx="48" cy="52" r="32" fill="${c}"/><circle cx="37" cy="46" r="4" fill="#222"/><circle cx="59" cy="46" r="4" fill="#222"/><ellipse cx="48" cy="58" rx="5" ry="3.5" fill="#222"/><path d="${mo}" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"/>${k=='cat'?'<path d="M10 56h20M10 64l20-4M86 56H66M86 64l-20-4" stroke="#222" stroke-width="1.5"/>':''}</svg>`}
+function petMood(){const u=S.me.id,t=day(u,S.date);if(!t.av)return null;return t.hit?'happy':(S.date<T()||new Date().getHours()>=18)?'sad':'push'}
+function petsHTML(){const m=petMood();if(!m)return'';const n=r1(tg(S.me.id)-day(S.me.id,S.date).pct),i=S.date.charCodeAt(9)%2;
+return`<div class="card pets" style="margin-top:14px">${['cat','dog'].map(k=>`<div class="pet ${m}" data-a="pet" data-k="${k}" data-m="${m}"><div class="bub">${PL[m][k][i].replace('{n}',n)}</div>${face(k,m=='push'?'flat':m)}</div>`).join('')}</div>`}
+function modal(h){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div>${h}</div>`;m.onclick=()=>m.remove();document.body.appendChild(m)}
+function weeklyCheck(){if(S.P.length<2||!S.me)return;const f=add(mon(T()),-7),t=add(f,6),k='ww'+f;if(localStorage[k])return;const[a,b]=S.P.map(p=>per(p.id,f,t));if(!a.ds.some(x=>x.av>0)||!b.ds.some(x=>x.av>0))return;localStorage[k]=1;
+const my=S.P[0].id==S.me.id?a:b,ot=my==a?b:a;
+if(r1(my.avg)>r1(ot.avg)){modal(`<span class="trophy">🏆</span><h2>WEEKLY CHAMPION</h2><p>You won last week: ${r1(my.avg)}% vs ${r1(ot.avg)}%</p>`);confetti(140)}
+else if(r1(my.avg)<r1(ot.avg))modal(`<span class="trophy">🐱🐶</span><h2>${esc(opp(S.me.id).name)} won last week</h2><p>${r1(my.avg)}% vs ${r1(ot.avg)}%. Cat and dog say: new week, new crown!</p>`);
+else modal(`<span class="trophy">🤝</span><h2>Last week was a draw</h2>`)}
 // ---------- views ----------
 const bar=p=>`<div class="bar"><i style="width:${p}%"></i></div>`;
 function chart(lb,A,B){const W=700,H=200,g=W/lb.length;let s=`<svg class="chart" viewBox="0 0 ${W} ${H+24}">`;lb.forEach((l,i)=>{const x=i*g+g/2;[[A[i],-13,'var(--a)'],[B[i],3,'var(--b)']].forEach(([v,o,c])=>{const h=(v||0)*H/100;s+=`<rect x="${x+o}" y="${H-h}" width="12" height="${h}" rx="3" fill="${c}"/>`});s+=`<text x="${x}" y="${H+16}">${l}</text>`});return s+'</svg>'}
@@ -151,7 +179,7 @@ const rows=[['Completion today',x=>r1(day(x,d).pct)+'%',x=>day(x,d).pct],['Lifet
 const lb=p1?`<div class="card" style="margin-top:14px"><b>🏆 Leaderboard</b><table><tr><th></th><th>${esc(p0.name)}</th><th>${esc(p1.name)}</th></tr>${rows.map(([n,f,v])=>{const a=v(p0.id),b=v(p1.id);return`<tr><td>${n}</td><td class="${a>b?'lead':''}">${f(p0.id)}</td><td class="${b>a?'lead':''}">${f(p1.id)}</td></tr>`}).join('')}</table></div>`:'';
 const col=(p,i)=>{if(!p)return'';const hs=live(p.id,d),mine=p.id==u,t=day(p.id,d);return`<div class="card"><b>${esc(p.name)}</b> <span class="mu">${t.e}/${t.av} XP</span>${bar(t.pct)}${hs.length?hs.map(h=>`<button class="hb ${LI[h.id+'|'+d]?'done':''}" data-a="tog" data-id="${h.id}" ${mine?'':'disabled'}><span class="ck">${LI[h.id+'|'+d]?'✅':'☐'}</span>${esc(h.habit_name)}<span class="x">+${h.points} XP</span></button>`).join(''):'<p class="mu">No habits yet. Add some in Settings.</p>'}</div>`};
 const ch=CH[[...d].reduce((s,c)=>s+c.charCodeAt(0),0)%CH.length];
-return`<div class="win card">🏆 WHO IS WINNING?<br>${w}</div><div class="g2">${S.P.map(card).join('')}</div>${lb}
+return`${dq()}<div class="win card">🏆 WHO IS WINNING?<br>${w}${p1?`<div class="tug"><i style="width:${(()=>{const a=day(p0.id,d).pct,b=day(p1.id,d).pct;return a+b?a/(a+b)*100:50})()}%"></i></div>`:''}</div>${petsHTML()}<div class="g2" style="margin-top:14px">${S.P.map(card).join('')}</div>${lb}
 <div class="card" style="margin-top:14px"><b>⚡ Today's bonus</b> <span class="mu">${ch}</span></div>
 <div class="row" style="justify-content:center;margin-top:16px"><button class="btn" data-a="prev">← Previous day</button><button class="btn pri" data-a="today">${d==T()?'TODAY':d}</button><button class="btn" data-a="next">Next day →</button></div><div class="g2">${col(p0)}${col(p1)}</div>`}
 function analysis(u,r){const n=esc(opp(opp(u).id).name);if(!r.ds.length)return'';const b=r.hp[0],w=r.hp[r.hp.length-1];return`${n} had ${r.avg>=80?'a strong':r.avg>=60?'a solid':'a tough'} period at ${r1(r.avg)}%${b?`, strongest in ${esc(b.name)} (${r1(b.pct)}%)`:''}${w&&w!=b?`, weakest in ${esc(w.name)} (${r1(w.pct)}%)`:''}.`}
@@ -187,8 +215,8 @@ function sky(){let s='';for(let i=0;i<60;i++)s+=`${Math.random()*100}vw ${Math.r
 function authView(){$('#app').innerHTML=`<h1>⚔️ HABIT BATTLE</h1><div class="sub">Different goals. Same battlefield.</div><div class="card" style="max-width:380px;margin:30px auto"><div class="row"><input class="hn" id="nm" placeholder="Your name (Utkarsh / Kalash)" maxlength="30"></div><div class="row"><input class="hn" id="pw" type="password" placeholder="Password (min 6 characters)"></div><div class="row"><button class="btn pri" data-a="signin">Enter battle</button><button class="btn" data-a="signup">First time? Join</button></div></div>`}
 async function boot(){if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="card" style="margin:40px 0">Setup needed: paste your Supabase URL and anon key at the top of the script in index.html.</div>';return}
 sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data:{session}}=await sb.auth.getSession();if(!session)return authView();S.me=session.user;await load();
-if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render()}
+if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render();weeklyCheck()}
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(el)act(el.dataset.a,el).catch(er=>toast('Error: '+er.message,9000))});
 document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(el)chg(el.dataset.c,el)});
-theme();sky();setInterval(()=>{theme();clock()},30000);setInterval(async()=>{if(S.me&&S.page=='home'&&!document.hidden){await load();render()}},30000);boot().catch(er=>toast('Error: '+er.message,9000));
+theme();sky();let lastT=T();setInterval(()=>{theme();clock();if(T()!=lastT){if(S.date==lastT)S.date=T();lastT=T();if(S.me){C={};render()}}},30000);setInterval(async()=>{if(S.me&&S.page=='home'&&!document.hidden){await load();render()}},30000);boot().catch(er=>toast('Error: '+er.message,9000));
 </script></body></html>
