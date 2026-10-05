@@ -129,6 +129,25 @@ body.day .tree{opacity:.48}
 .mission-board{margin-top:16px;padding:16px;border-radius:20px;background:linear-gradient(135deg,rgba(109,93,252,.10),rgba(33,199,122,.07));border:1px solid var(--bd)}
 .mission-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .mission-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--bd);font-size:12px}
+
+/* ===== V7 LIVING WORLD ===== */
+.world-object{cursor:pointer;pointer-events:auto}
+.tree{cursor:pointer;pointer-events:auto;transition:filter .25s}.tree:hover{filter:brightness(1.15) saturate(1.1)}.tree.rustle{animation:treeRustle .7s ease-in-out}
+@keyframes treeRustle{20%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}80%{transform:rotate(-1deg)}}
+.bird{cursor:pointer;pointer-events:auto}.bird.flutter{animation:birdFlutter .7s ease-in-out!important}
+@keyframes birdFlutter{25%{transform:translateY(-18px) scale(1.12)}65%{transform:translateY(8px) scale(.92)}}
+.leaf-float{cursor:pointer;pointer-events:auto}.leaf-float.fall-now{animation:leafClickFall 1.1s ease-in forwards!important}
+@keyframes leafClickFall{0%{transform:scale(1) rotate(0);opacity:.8}45%{transform:translate(35px,42vh) rotate(190deg) scale(1.15);opacity:1}100%{transform:translate(-30px,108vh) rotate(500deg) scale(.65);opacity:0}}
+.world-toast{position:fixed;z-index:50;pointer-events:none;font-weight:800;font-size:18px;text-shadow:0 2px 12px rgba(0,0,0,.3);animation:worldToast 1.4s ease-out forwards}
+@keyframes worldToast{0%{transform:translateY(0) scale(.8);opacity:0}15%{transform:translateY(-5px) scale(1);opacity:1}100%{transform:translateY(-75px) scale(.92);opacity:0}}
+.pet-zone{display:grid!important;grid-template-columns:1fr 1fr;align-items:end;gap:24px;padding:4px 8% 0}.pet-zone .pet{width:auto}.pet-zone .pet svg{width:125px;height:125px}
+.pet.love svg{animation:petLove .8s ease-in-out}.pet.bark svg{animation:petBark .35s ease-in-out 2}
+@keyframes petLove{35%{transform:scale(1.12) rotate(-5deg)}70%{transform:scale(1.04) rotate(5deg)}}@keyframes petBark{25%{transform:translateX(-5px) rotate(-3deg)}75%{transform:translateX(5px) rotate(3deg)}}
+.heart-pop{position:fixed;z-index:51;pointer-events:none;font-size:24px;animation:heartPop 1.2s ease-out forwards}@keyframes heartPop{to{transform:translateY(-80px) scale(1.35);opacity:0}}
+.empty-missions{padding:22px;border:1px dashed var(--bd);border-radius:17px;text-align:center;background:rgba(255,255,255,.025)}
+body:not(.day) .card{box-shadow:0 22px 70px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.04)}
+@media(prefers-reduced-motion:reduce){.bird,.leaf-float,.firefly,.toy,.tree{animation:none!important}}
+@media(max-width:700px){.pet-zone{padding:4px 0;gap:6px}.pet-zone .pet svg{width:100px;height:100px}}
 </style></head><body>
 <div class="sky" id="sky"></div>
 <main id="app"></main><div class="toast" id="toast"></div>
@@ -183,7 +202,27 @@ const m=document.createElement('div');m.className='modal';m.innerHTML=`<div><div
 const STREAK_REWARDS={3:{icon:'🦴',name:'Starter Treat',desc:'3-day streak! Your pet earned a bone.',xp:30},7:{icon:'🧶',name:'Playtime',desc:'7-day streak! Unlock a wool-ball play reward.',xp:70},14:{icon:'🎁',name:'Consistency Chest',desc:'14-day streak! A bigger reward unlocked.',xp:140},21:{icon:'👑',name:'Streak Crown',desc:'21-day streak! You are officially on fire.',xp:210},30:{icon:'🏆',name:'Legend Reward',desc:'30-day streak! Legendary consistency.',xp:300}};
 const streakReward=n=>Object.keys(STREAK_REWARDS).map(Number).filter(x=>n>=x).sort((a,b)=>b-a)[0];
 function streakRewardHTML(u){const k=streakReward(stk(u).c),r=k&&STREAK_REWARDS[k];return r?`<div class="reward-box"><span><b>${r.icon} ${r.name}</b><br><span class="mu">${r.desc}</span></span><span>+${r.xp} XP</span></div>`:`<div class="reward-box"><span>🔥 Build your first streak reward</span><b>3 days → 🦴</b></div>`}
-function toysHTML(){return `<div class="play-zone"><span class="toy" data-toy="ball" title="Throw wool ball">🧶</span><span class="toy" data-toy="bone" title="Give a treat">🦴</span><span class="toy" data-toy="spark" title="Celebrate">✨</span><span class="toy" data-toy="heart" title="Pet the pets">💗</span></div>`}
+function toysHTML(){return `<div class="play-zone"><span class="toy" data-toy="ball" title="Throw wool ball">🧶</span><span class="toy" data-toy="bone" title="Give dog a bone">🦴</span><span class="toy" data-toy="spark" title="Celebrate">✨</span><span class="toy" data-toy="heart" title="Give love">💗</span></div><div class="mu" style="text-align:center;font-size:11px;margin-top:2px">🧶 Play · 🦴 Treat · ✨ Celebrate · 💗 Love</div>`}
+
+function worldFloat(text,x,y){
+  const e=document.createElement('div');e.className='world-toast';e.textContent=text;e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1500)
+}
+function hearts(target,n=3){
+  const r=target.getBoundingClientRect();
+  for(let i=0;i<n;i++){const e=document.createElement('div');e.className='heart-pop';e.textContent=['💗','💕','✨','🐾'][i%4];e.style.left=(r.left+r.width/2+(Math.random()*60-30))+'px';e.style.top=(r.top+20)+'px';e.style.animationDelay=(i*.08)+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),1500)}
+}
+function petAction(el){
+  const k=el.dataset.k;el.classList.remove('love','bark');void el.offsetWidth;
+  if(k==='dog'){el.classList.add('bark');hearts(el,2);toast(['🐶 WOOF! WOOF!','🐶 *happy tail wagging*','🐕 Best human!','🦴 BARK! Treat please!'][Math.floor(Math.random()*4)],2300)}
+  else{el.classList.add('love');hearts(el,4);toast(['🐱 Prrrrrr...','😽 Cat accepts your love.','🐾 *happy purr*','😻 You may pet the cat again.'][Math.floor(Math.random()*4)],2300)}
+}
+function worldClick(type,el){
+  const r=el.getBoundingClientRect();
+  if(type==='tree'){el.classList.remove('rustle');void el.offsetWidth;el.classList.add('rustle');worldFloat('🍃 rustle!',r.left+r.width/2,r.top);toast(['🌳 The tree whispers: keep going.','🍃 Leaves are dancing!','🌳 A little nature break.'][Math.floor(Math.random()*3)],1800)}
+  if(type==='bird'){el.classList.remove('flutter');void el.offsetWidth;el.classList.add('flutter');worldFloat('🐦 tweet!',r.left,r.top);toast(['🐦 Tweet tweet!','🕊️ The bird noticed you!','🐦 Fly high!'][Math.floor(Math.random()*3)],1800)}
+  if(type==='leaf'){el.classList.remove('fall-now');void el.offsetWidth;el.classList.add('fall-now');worldFloat('🍃 falling...',r.left,r.top);setTimeout(()=>{el.style.visibility='hidden';setTimeout(()=>{el.style.visibility='visible';el.classList.remove('fall-now')},2200)},1100)}
+}
+
 function playToy(el){el.classList.remove('bounce');void el.offsetWidth;el.classList.add('bounce');const m={ball:['The wool ball is flying! 🧶','Cat zoomies activated! 😼','Doggo is chasing it! 🐶'],bone:['Treat unlocked! 🦴','Good human. Very good human. 🐾'],spark:['✨ Tiny celebration, big energy!','⭐ Keep the streak alive!'],heart:['🐾 Your pets believe in you.','💗 Good vibes only.']};const a=m[el.dataset.toy]||m.spark;toast(a[Math.floor(Math.random()*a.length)],2200)}
 
 // ---------- actions ----------
@@ -197,7 +236,7 @@ else if(opp(u)&&a.pct>ob.pct&&b.pct<=ob.pct)k='crown';else if(a.pct>=50&&b.pct<5
 const after=stk(u).c;const milestone=streakReward(after);if(milestone&&after>before){toast(`🔥 ${after}-DAY STREAK! ${STREAK_REWARDS[milestone].icon} ${STREAK_REWARDS[milestone].name}`,5000);confetti(55)}else toast((k=='perfect'?'👑 PERFECT DAY  +25 XP · ':'')+quote(k),5000);checkAch()}}
 async function act(a,el){const u=S.me?.id;
 if(a=='tog')return tog(el.dataset.id);
-if(a=='pet'){const L=PL[el.dataset.m][el.dataset.k];return toast(L[Math.floor(Math.random()*L.length)].replace('{n}',r1(tg(u)-day(u,S.date).pct)),3000)}
+if(a=='pet'){petAction(el);return}
 if(a=='themeToggle'){const m=localStorage.th||'auto';localStorage.th=m=='day'?'night':m=='night'?'auto':'day';theme();return render()}
 if(a=='prev'||a=='next'){S.date=add(S.date,a=='prev'?-1:1);return render()}
 if(a=='today'){S.date=T();return render()}
@@ -212,7 +251,7 @@ if(a=='out'){await sb.auth.signOut();return boot()}
 
 if(a=='applyMissions'){
   if(!confirm('Apply the recommended missions for this player? Current active missions will be retired from tomorrow; existing history stays safe.'))return;
-  const list=recommendedFor(u), current=S.H.filter(h=>h.user_id==u&&h.active&&!h.a);
+  const list=recommendedFor(u), current=S.H.filter(h=>h.user_id==u&&!h.a);
   const tm=new Date(add(T(),1)+'T00:00:00').toISOString();
   for(const h of current)await sb.from('habits').update({active:false,archived_at:tm}).eq('id',h.id);
   for(let i=0;i<list.length;i++)await sb.from('habits').insert({user_id:u,habit_name:list[i][0],points:list[i][1],sort:i,created_at:tm});
@@ -220,7 +259,7 @@ if(a=='applyMissions'){
 }
 
 if(a=='add'){const n=$('#nn').value.trim().slice(0,60),p=Math.max(1,Math.min(100,+$('#np').value||10));if(!n)return;const m=S.H.filter(h=>h.user_id==u).length;await sb.from('habits').insert({user_id:u,habit_name:n,points:p,sort:m})}
-if(a=='up'||a=='dn'){const L=S.H.filter(h=>h.user_id==u&&h.active&&!h.a),i=L.findIndex(h=>h.id==el.dataset.id),j=a=='up'?i-1:i+1;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];await Promise.all(L.map((h,k)=>sb.from('habits').update({sort:k}).eq('id',h.id)))}
+if(a=='up'||a=='dn'){const L=S.H.filter(h=>h.user_id==u&&!h.a),i=L.findIndex(h=>h.id==el.dataset.id),j=a=='up'?i-1:i+1;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];await Promise.all(L.map((h,k)=>sb.from('habits').update({sort:k}).eq('id',h.id)))}
 if(a=='retire'||a=='restore'){const h=S.H.find(x=>x.id==el.dataset.id),tm=new Date(add(T(),1)+'T00:00:00').toISOString();
 if(a=='retire')await sb.from('habits').update({active:false,archived_at:tm}).eq('id',h.id);
 else await sb.from('habits').insert({user_id:u,habit_name:h.habit_name,points:h.points,sort:99,created_at:tm})}
@@ -249,8 +288,23 @@ sad:{cat:["Meow... target missed. Tomorrow is a fresh bowl 🐱","One bad day is
 function face(k,m){const c=k=='cat'?'#f4a259':'#d9a066',mo=m=='happy'?'M38 66q10 10 20 0':m=='sad'?'M38 72q10-9 20 0':'M40 68h16';
 return`<svg viewBox="0 0 96 96">${k=='cat'?`<path d="M16 40L20 8l22 18zM80 40L76 8 54 26z" fill="${c}"/>`:`<ellipse cx="14" cy="46" rx="11" ry="22" fill="#9a6a3a"/><ellipse cx="82" cy="46" rx="11" ry="22" fill="#9a6a3a"/>`}<circle cx="48" cy="52" r="32" fill="${c}"/><circle cx="37" cy="46" r="4" fill="#222"/><circle cx="59" cy="46" r="4" fill="#222"/><ellipse cx="48" cy="58" rx="5" ry="3.5" fill="#222"/><path d="${mo}" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"/>${k=='cat'?'<path d="M10 56h20M10 64l20-4M86 56H66M86 64l-20-4" stroke="#222" stroke-width="1.5"/>':''}</svg>`}
 function petMood(){const u=S.me.id,t=day(u,S.date);if(!t.av)return null;return t.hit?'happy':(S.date<T()||new Date().getHours()>=18)?'sad':'push'}
-function petsHTML(){const m=petMood();if(!m)return'';const n=r1(tg(S.me.id)-day(S.me.id,S.date).pct),i=S.date.charCodeAt(9)%2;
-return`<div class="card pets" style="margin-top:14px"><div class="hero-line"><b>🐾 Battle Buddies</b><span class="mu">Tap the toys</span></div>${['cat','dog'].map(k=>`<div class="pet ${m}" data-a="pet" data-k="${k}" data-m="${m}"><div class="bub">${PL[m][k][i].replace('{n}',n)}</div>${face(k,m=='push'?'flat':m)}</div>`).join('')}${toysHTML()}</div>`}
+function petsHTML(){
+  const t=day(S.me.id,S.date),m=petMood()||'push',n=r1(tg(S.me.id)-t.pct),i=(S.date.charCodeAt(9)||0)%2;
+  return `<div class="card pets" style="margin-top:14px">
+    <div class="hero-line"><b>🌿 Your Living World</b><span class="mu">Click the pets, trees, birds or leaves</span></div>
+    <div class="pet-zone">
+      <div class="pet ${m}" data-a="pet" data-k="cat" data-m="${m}">
+        <div class="bub">${PL[m].cat[i%PL[m].cat.length].replace('{n}',n)}</div>${face('cat',m=='push'?'flat':m)}
+        <div class="pet-hint">🐱 click me</div>
+      </div>
+      <div class="pet ${m}" data-a="pet" data-k="dog" data-m="${m}">
+        <div class="bub">${PL[m].dog[i%PL[m].dog.length].replace('{n}',n)}</div>${face('dog',m=='push'?'flat':m)}
+        <div class="pet-hint">🐶 click me</div>
+      </div>
+    </div>
+    ${toysHTML()}
+  </div>`
+}
 function modal(h){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div>${h}</div>`;m.onclick=()=>m.remove();document.body.appendChild(m)}
 function weeklyCheck(){if(S.P.length<2||!S.me)return;const f=add(mon(T()),-7),t=add(f,6),k='ww'+f;if(localStorage[k])return;const[a,b]=S.P.map(p=>per(p.id,f,t));if(!a.ds.some(x=>x.av>0)||!b.ds.some(x=>x.av>0))return;localStorage[k]=1;
 const my=S.P[0].id==S.me.id?a:b,ot=my==a?b:a;
@@ -269,21 +323,13 @@ function recommendedFor(u){
 }
 async function ensureHabits(){
   if(!S.me)return false;
-  const active=S.H.filter(h=>h.user_id==S.me.id&&h.active&&!h.a);
+  const active=S.H.filter(h=>h.user_id==S.me.id&&!h.a);
   if(active.length)return false;
   const list=recommendedFor(S.me.id);
   const base=new Date().toISOString();
-  for(let i=0;i<list.length;i++){
-    const [name,points]=list[i];
-    await sb.from('habits').insert({
-      user_id:S.me.id,
-      habit_name:name,
-      points:points,
-      sort:i,
-      active:true,
-      created_at:base
-    });
-  }
+  const rows=list.map(([name,points],i)=>({user_id:S.me.id,habit_name:name,points,sort:i,created_at:base}));
+  const {error}=await sb.from('habits').insert(rows);
+  if(error){console.error(error);toast('Could not add missions: '+error.message,7000);return false}
   await load();
   return true;
 }
@@ -305,7 +351,7 @@ w=!a.e&&!b.e?'🏁 Battle not started yet':df<.05?'🤝 It\'s a draw':`${esc(nm)
 const m=day(u,d),o=day(opp(u).id,d);if(m.pct<o.pct&&m.av)w+=`<div class="mu" style="font-size:14px">You need ${Math.ceil((o.pct-m.pct)/100*m.av+1)} more points to take the lead</div>`}
 const rows=[['Completion today',x=>r1(day(x,d).pct)+'%',x=>day(x,d).pct],['Lifetime XP',xpT,xpT],['Perfect days',x=>ser(x).filter(y=>y.perf).length,x=>ser(x).filter(y=>y.perf).length],['Current streak',x=>stk(x).c,x=>stk(x).c],['Best streak',x=>stk(x).b,x=>stk(x).b],['Week XP',x=>per(x,mon(T()),T()).xp,x=>per(x,mon(T()),T()).xp]];
 const lb=p1?`<div class="card" style="margin-top:14px"><b>🏆 Leaderboard</b><table><tr><th></th><th>${esc(p0.name)}</th><th>${esc(p1.name)}</th></tr>${rows.map(([n,f,v])=>{const a=v(p0.id),b=v(p1.id);return`<tr><td>${n}</td><td class="${a>b?'lead':''}">${f(p0.id)}</td><td class="${b>a?'lead':''}">${f(p1.id)}</td></tr>`}).join('')}</table></div>`:'';
-const col=(p,i)=>{if(!p)return'';const hs=live(p.id,d),mine=p.id==u,t=day(p.id,d);return`<div class="card"><b>${esc(p.name)}</b> <span class="mu">${t.e}/${t.av} XP</span>${bar(t.pct)}${hs.length?hs.map(h=>`<button class="hb ${LI[h.id+'|'+d]?'done':''}" data-a="tog" data-id="${h.id}" ${mine?'':'disabled'}><span class="ck">${LI[h.id+'|'+d]?'✅':'☐'}</span>${esc(h.habit_name)}<span class="x">+${h.points} XP</span></button>`).join(''):'<p class="mu">No habits yet. Add some in Settings.</p>'}</div>`};
+const col=(p,i)=>{if(!p)return'';const hs=live(p.id,d),mine=p.id==u,t=day(p.id,d);return`<div class="card"><b>${esc(p.name)}</b> <span class="mu">${t.e}/${t.av} XP</span>${bar(t.pct)}${hs.length?hs.map(h=>`<button class="hb ${LI[h.id+'|'+d]?'done':''}" data-a="tog" data-id="${h.id}" ${mine?'':'disabled'}><span class="ck">${LI[h.id+'|'+d]?'✅':'☐'}</span>${esc(h.habit_name)}<span class="x">+${h.points} XP</span></button>`).join(''):'<div class="empty-missions"><b>🌱 No missions yet</b><p class="mu">Click below to add your recommended missions.</p><button class="btn pri" data-a="applyMissions">✨ Add my missions</button></div>'}</div>`};
 const ch=CH[[...d].reduce((s,c)=>s+c.charCodeAt(0),0)%CH.length];
 return`${dq()}<div class="win card">🏆 WHO IS WINNING?<br>${w}${p1?`<div class="tug"><i style="width:${(()=>{const a=day(p0.id,d).pct,b=day(p1.id,d).pct;return a+b?a/(a+b)*100:50})()}%"></i></div>`:''}</div>${petsHTML()}<div class="g2" style="margin-top:14px">${S.P.map(card).join('')}</div>${lb}
 <div class="card" style="margin-top:14px"><b>⚡ Today's bonus</b> <span class="mu">${ch}</span></div>
@@ -352,18 +398,24 @@ function sky(){let stars='';for(let i=0;i<80;i++)stars+=`${Math.random()*100}vw 
 <div class="nature-layer">
   <div class="nature-glow"></div>
   <div class="hill back"></div><div class="hill"></div>
-  <div class="tree t1"><div class="trunk"></div><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
-  <div class="tree t2"><div class="trunk"></div><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
-  <div class="tree t3"><div class="trunk"></div><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
-  <div class="bird b1"></div><div class="bird b2"></div><div class="bird b3"></div>
-  <div class="leaf-float">🍃</div><div class="leaf-float">🍂</div><div class="leaf-float">🍃</div><div class="leaf-float">🍂</div>
+  <div class="tree t1 world-object" title="Click the tree"><div class="trunk"></div><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
+  <div class="tree t2 world-object" title="Click the tree"><div class="trunk"></div><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
+  <div class="tree t3 world-object" title="Click the tree"><div class="trunk"></div><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
+  <div class="bird b1 world-object" title="Click bird"></div><div class="bird b2 world-object" title="Click bird"></div><div class="bird b3 world-object" title="Click bird"></div>
+  <div class="leaf-float world-object">🍃</div><div class="leaf-float world-object">🍂</div><div class="leaf-float world-object">🍃</div><div class="leaf-float world-object">🍂</div>
   <div class="firefly f1"></div><div class="firefly f2"></div><div class="firefly f3"></div><div class="firefly f4"></div><div class="firefly f5"></div>
 </div>`}
 function authView(){$('#app').innerHTML=`<h1>⚔️ HABIT BATTLE</h1><div class="sub">Different goals. Same battlefield.</div><div class="card" style="max-width:380px;margin:30px auto"><div class="row"><input class="hn" id="nm" placeholder="Your name (Utkarsh / Kalash)" maxlength="30"></div><div class="row"><input class="hn" id="pw" type="password" placeholder="Password (min 6 characters)"></div><div class="row"><button class="btn pri" data-a="signin">Enter battle</button><button class="btn" data-a="signup">First time? Join</button></div></div>`}
 async function boot(){if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="card" style="margin:40px 0">Setup needed: paste your Supabase URL and anon key at the top of the script in index.html.</div>';return}
 sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data:{session}}=await sb.auth.getSession();if(!session)return authView();S.me=session.user;await load();
 if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render();weeklyCheck()}
-document.addEventListener('click',e=>{const toy=e.target.closest('[data-toy]');if(toy)return playToy(toy);const el=e.target.closest('[data-a]');if(el)act(el.dataset.a,el).catch(er=>toast('Error: '+er.message,9000))});
+document.addEventListener('click',e=>{
+  const toy=e.target.closest('[data-toy]');if(toy)return playToy(toy);
+  const tree=e.target.closest('.tree');if(tree)return worldClick('tree',tree);
+  const bird=e.target.closest('.bird');if(bird)return worldClick('bird',bird);
+  const leaf=e.target.closest('.leaf-float');if(leaf)return worldClick('leaf',leaf);
+  const el=e.target.closest('[data-a]');if(el)act(el.dataset.a,el).catch(er=>toast('Error: '+er.message,9000))
+});
 document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(el)chg(el.dataset.c,el)});
 theme();sky();let lastT=T();setInterval(()=>{theme();clock();if(T()!=lastT){if(S.date==lastT)S.date=T();lastT=T();if(S.me){C={};render()}}},30000);setInterval(async()=>{if(S.me&&S.page=='home'&&!document.hidden){await load();render()}},30000);boot().catch(er=>toast('Error: '+er.message,9000));
 </script></body></html>
