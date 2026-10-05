@@ -148,6 +148,178 @@ body.day .tree{opacity:.48}
 body:not(.day) .card{box-shadow:0 22px 70px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.04)}
 @media(prefers-reduced-motion:reduce){.bird,.leaf-float,.firefly,.toy,.tree{animation:none!important}}
 @media(max-width:700px){.pet-zone{padding:4px 0;gap:6px}.pet-zone .pet svg{width:100px;height:100px}}
+
+/* =========================================================
+   LUXURY EDITION — premium private-club / game aesthetic
+   ========================================================= */
+:root{
+ --lux-gold:#d8b56a;--lux-gold2:#f4d89a;--lux-cream:#f7f1e5;
+ --lux-ink:#171a21;--lux-muted:#777d88;--lux-line:rgba(115,93,53,.18);
+}
+body{
+ font-family:Sora,system-ui,sans-serif;
+ letter-spacing:-.01em;
+}
+body.day{
+ --panel:rgba(255,252,246,.76);
+ --panel2:rgba(255,248,235,.50);
+ --bd:rgba(92,72,40,.14);
+ --a:#8a6b2e;--b:#b47b3d;--ok:#3b8064;
+ background:
+  radial-gradient(circle at 18% 8%,rgba(216,181,106,.20),transparent 24%),
+  radial-gradient(circle at 82% 18%,rgba(167,211,196,.20),transparent 25%),
+  linear-gradient(145deg,#f8f5ed,#e9f1ed 48%,#e8eef4);
+}
+body:not(.day){
+ --panel:rgba(20,23,31,.73);
+ --panel2:rgba(30,32,39,.62);
+ --bd:rgba(216,181,106,.18);
+ --a:#d4ad62;--b:#c88758;--ok:#61b18a;
+ background:
+  radial-gradient(circle at 18% 4%,rgba(216,181,106,.12),transparent 24%),
+  radial-gradient(circle at 85% 15%,rgba(93,128,154,.16),transparent 26%),
+  linear-gradient(145deg,#080a0f,#11151b 48%,#0b1016);
+}
+main{max-width:1240px;padding:30px 22px 90px}
+.topbar{padding:8px 2px 2px}
+h1{
+ font-size:clamp(35px,6vw,58px);
+ font-weight:800;
+ letter-spacing:-.06em;
+ text-shadow:0 8px 30px rgba(0,0,0,.12);
+}
+.brand-dot{width:11px;height:11px;background:var(--lux-gold);box-shadow:0 0 18px rgba(216,181,106,.8)}
+.sub{letter-spacing:.01em}
+.nature-caption{font-family:Georgia,serif;font-style:italic;letter-spacing:.01em}
+.clock{
+ border-color:var(--bd);background:var(--panel);color:var(--mu);
+ box-shadow:0 10px 30px rgba(0,0,0,.08),inset 0 1px rgba(255,255,255,.25)
+}
+nav{
+ margin-top:18px;padding:7px;
+ background:var(--panel);
+ border:1px solid var(--bd);
+ border-radius:18px;
+ box-shadow:0 15px 45px rgba(0,0,0,.10),inset 0 1px rgba(255,255,255,.18);
+}
+nav button{
+ background:transparent!important;border-color:transparent!important;
+ color:var(--mu)!important;font-size:12px;
+}
+nav button.on{
+ color:#fff!important;
+ background:linear-gradient(135deg,#8f6c2d,#c79d55)!important;
+ box-shadow:0 8px 28px rgba(177,132,56,.32)!important;
+}
+body.day nav button.on{color:#fff!important}
+.card{
+ border:1px solid var(--bd);
+ border-radius:26px;
+ background:
+  linear-gradient(145deg,var(--panel),var(--panel2));
+ box-shadow:
+  0 25px 70px rgba(0,0,0,.12),
+  inset 0 1px rgba(255,255,255,.28),
+  inset 0 -1px rgba(0,0,0,.03);
+}
+body:not(.day) .card{
+ box-shadow:
+  0 28px 90px rgba(0,0,0,.34),
+  inset 0 1px rgba(255,255,255,.06),
+  0 0 0 1px rgba(216,181,106,.025);
+}
+.pc:before{height:3px;background:linear-gradient(90deg,var(--lux-gold),transparent)}
+.pc.p1:before{background:linear-gradient(90deg,#b8784e,transparent)}
+.pc h2{font-family:Georgia,serif;font-size:25px}
+.st{
+ background:rgba(255,255,255,.035);
+ border-color:var(--bd);
+ box-shadow:inset 0 1px rgba(255,255,255,.08)
+}
+.hb{
+ background:rgba(255,255,255,.025);
+ border-color:var(--bd);
+}
+.hb.done{
+ background:linear-gradient(90deg,rgba(97,177,138,.17),rgba(216,181,106,.07));
+ border-color:rgba(97,177,138,.30);
+}
+.hb .x{color:var(--lux-gold2)}
+.btn.pri{
+ background:linear-gradient(135deg,#8d6b31,#c49a50);
+ box-shadow:0 10px 30px rgba(177,132,56,.25);
+}
+.btn:not(.pri){border-color:var(--bd)}
+.reward-box{
+ background:linear-gradient(135deg,rgba(216,181,106,.13),rgba(97,177,138,.06));
+ border-color:rgba(216,181,106,.25);
+}
+.reward-box b{color:var(--lux-gold2)}
+.badge-pill{
+ background:rgba(216,181,106,.09);
+ border-color:rgba(216,181,106,.23);
+}
+.dq{
+ font-family:Georgia,serif;
+ font-size:21px;
+ background:linear-gradient(145deg,rgba(216,181,106,.10),var(--panel));
+}
+.win{
+ background:
+  radial-gradient(circle at 15% 10%,rgba(216,181,106,.13),transparent 30%),
+  linear-gradient(145deg,var(--panel),var(--panel2));
+}
+.mission-board{
+ background:
+  radial-gradient(circle at 90% 0,rgba(216,181,106,.13),transparent 30%),
+  linear-gradient(145deg,var(--panel),var(--panel2));
+ border-color:var(--bd);
+ box-shadow:inset 0 1px rgba(255,255,255,.08)
+}
+.mission-chip{
+ background:rgba(255,255,255,.035);
+ border-color:var(--bd)
+}
+/* Luxury living world */
+.pets{
+ min-height:280px;
+ background:
+  radial-gradient(circle at 18% 30%,rgba(216,181,106,.13),transparent 22%),
+  radial-gradient(circle at 80% 10%,rgba(102,153,151,.14),transparent 28%),
+  linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.05));
+}
+.pets:before{
+ content:"";
+ position:absolute;left:6%;right:6%;bottom:26px;height:1px;
+ background:linear-gradient(90deg,transparent,var(--lux-gold),transparent);
+ opacity:.28;
+}
+.pet-zone .pet svg{
+ width:145px;height:145px;
+ filter:drop-shadow(0 16px 13px rgba(0,0,0,.20));
+}
+.bub{
+ background:rgba(255,255,255,.05);
+ border-color:var(--bd);
+ box-shadow:0 8px 24px rgba(0,0,0,.08);
+}
+.toy{
+ filter:drop-shadow(0 9px 10px rgba(0,0,0,.20));
+}
+.toy:hover{filter:drop-shadow(0 0 12px rgba(216,181,106,.55))}
+.world-toast{color:var(--lux-gold2)}
+/* more realistic landscape */
+.hill{
+ background:linear-gradient(180deg,rgba(46,86,73,.30),rgba(10,31,29,.14));
+}
+.hill.back{background:linear-gradient(180deg,rgba(117,151,138,.18),rgba(19,47,43,.08))}
+.tree .leaf{background:radial-gradient(circle at 30% 25%,#92c5a8,#2e6b56 72%);box-shadow:0 13px 30px rgba(0,0,0,.20)}
+body.day .tree .leaf{background:radial-gradient(circle at 30% 25%,#a6d5bd,#4e9073 72%)}
+body:not(.day) .tree .leaf{background:radial-gradient(circle at 30% 25%,#5b8d76,#214d42 72%)}
+.firefly{background:#ffe6a0;box-shadow:0 0 18px 6px rgba(255,230,160,.62)}
+/* decorative gold rule */
+.hero-line:after{content:"";position:absolute;left:0;bottom:-7px;width:42px;height:1px;background:var(--lux-gold);opacity:.65}
+.hero-line{position:relative}
 </style></head><body>
 <div class="sky" id="sky"></div>
 <main id="app"></main><div class="toast" id="toast"></div>
@@ -378,7 +550,7 @@ return report(f,e,f0.toLocaleDateString('en',{month:'long',year:'numeric'}),['We
 function alltime(){const[p0,p1]=S.P;if(!p1)return'<div class="card">Waiting for the second player.</div>';const f=S.H.map(h=>h.c).sort()[0]||T(),a=per(p0.id,f,T()),b=per(p1.id,f,T());
 const L=(p,r)=>{const x=xpT(p.id),l=lv(x);return`<div class="card"><h3>${esc(p.name)}</h3><div class="g3"><div class="st"><b>${x}</b>total XP</div><div class="st"><b>Lv ${l.l}</b>level</div><div class="st"><b>${r.done}</b>habits done</div><div class="st"><b>${r.perf}</b>perfect days</div><div class="st"><b>${r.best}</b>longest streak</div><div class="st"><b>${r1(r.avg)}%</b>avg</div></div></div>`};
 return`<div class="g2">${L(p0,a)}${L(p1,b)}</div><div class="card win" style="margin-top:14px">⚔️ Days won<br>${esc(p0.name)} — ${a.wins} · ${esc(p1.name)} — ${b.wins} · Draws — ${a.ds.filter(x=>x.av>0&&r1(x.pct)==r1(day(p1.id,x.d).pct)).length}</div>`}
-function settings(){const u=S.me.id,m=me(),mine=S.H.filter(h=>h.user_id==u),L=mine.filter(h=>h.active&&!h.a),R=mine.filter(h=>!h.active);
+function settings(){const u=S.me.id,m=me(),mine=S.H.filter(h=>h.user_id==u),L=mine.filter(h=>!h.a),R=mine.filter(h=>!!h.a);
 return`<div class="card"><b>Profile</b><div class="row"><input class="hn" data-c="pname" value="${esc(m.name)}" maxlength="30" aria-label="Name"><label>Daily target % <input class="pt" type="number" min="1" max="100" data-c="tgt" value="${m.daily_target}"></label>
 <label>Theme <select data-c="theme">${['auto','day','night'].map(x=>`<option ${((localStorage.th||'auto')==x)?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
 <div class="card" style="margin-top:14px"><div class="hero-line"><b>My habits</b><button class="btn" data-a="applyMissions">✨ Use my recommended missions</button></div>${L.map(h=>`<div class="row"><input class="hn" data-c="name" data-id="${h.id}" value="${esc(h.habit_name)}" maxlength="60"><input class="pt" type="number" min="1" max="100" data-c="pts" data-id="${h.id}" value="${h.points}"><button class="btn" data-a="up" data-id="${h.id}">↑</button><button class="btn" data-a="dn" data-id="${h.id}">↓</button><button class="btn" data-a="retire" data-id="${h.id}">Retire</button></div>`).join('')}
@@ -386,7 +558,7 @@ return`<div class="card"><b>Profile</b><div class="row"><input class="hn" data-c
 ${R.length?'<b>Retired</b>'+R.map(h=>`<div class="row"><span class="hn mu">${esc(h.habit_name)}</span><button class="btn" data-a="restore" data-id="${h.id}">Restore</button></div>`).join(''):''}
 <p class="mu" style="font-size:12px">Renames keep old logs under the old name. Point changes and retiring apply from tomorrow, so history never changes.</p></div>
 <div class="card row" style="margin-top:14px"><button class="btn pri" data-a="json">Export My Data (JSON)</button><button class="btn" data-a="csv">Download CSV</button><button class="btn" data-a="reset">Reset today</button><button class="btn" data-a="out">Sign out</button></div>`}
-function shell(inner){return`<div class="topbar"><div><h1><span class="brand-mark"><span class="brand-dot"></span> HABIT BATTLE</span></h1><div class="sub">Two lives. Different missions. One playful daily battle.</div><div class="nature-caption">🍃 Your little world grows when you show up.</div></div><div class="clock" id="clk"></div></div>
+function shell(inner){return`<div class="topbar"><div><h1><span class="brand-mark"><span class="brand-dot"></span> HABIT BATTLE</span></h1><div class="sub">Two lives. Different missions. One private little world.</div><div class="nature-caption">🍃 Your little world grows when you show up.</div></div><div class="clock" id="clk"></div></div>
 <nav>${[['home','⚔️ Battle'],['weekly','📅 Weekly'],['monthly','📊 Monthly'],['all','🏆 All time'],['set','⚙️ Settings']].map(([k,n])=>`<button class="${S.page==k?'on':''}" data-a="pg" data-p="${k}">${n}</button>`).join('')}<button data-a="themeToggle">◐ Theme</button></nav>${inner}`}
 function render(){$('#app').innerHTML=shell({home,weekly,monthly,all:alltime,set:settings}[S.page]());clock()}
 function clock(){const e=$('#clk');if(e)e.textContent=new Date().toLocaleString('en',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
@@ -407,8 +579,16 @@ function sky(){let stars='';for(let i=0;i<80;i++)stars+=`${Math.random()*100}vw 
 </div>`}
 function authView(){$('#app').innerHTML=`<h1>⚔️ HABIT BATTLE</h1><div class="sub">Different goals. Same battlefield.</div><div class="card" style="max-width:380px;margin:30px auto"><div class="row"><input class="hn" id="nm" placeholder="Your name (Utkarsh / Kalash)" maxlength="30"></div><div class="row"><input class="hn" id="pw" type="password" placeholder="Password (min 6 characters)"></div><div class="row"><button class="btn pri" data-a="signin">Enter battle</button><button class="btn" data-a="signup">First time? Join</button></div></div>`}
 async function boot(){if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="card" style="margin:40px 0">Setup needed: paste your Supabase URL and anon key at the top of the script in index.html.</div>';return}
-sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data:{session}}=await sb.auth.getSession();if(!session)return authView();S.me=session.user;await load();
-if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render();weeklyCheck()}
+sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const{data:{session}}=await sb.auth.getSession();if(!session)return authView();
+S.me=session.user;await load();
+if(!S.P.some(p=>p.id==S.me.id)){
+  await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});
+  await load();
+}
+await ensureHabits();
+await load();
+render();weeklyCheck()}
 document.addEventListener('click',e=>{
   const toy=e.target.closest('[data-toy]');if(toy)return playToy(toy);
   const tree=e.target.closest('.tree');if(tree)return worldClick('tree',tree);
