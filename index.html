@@ -100,10 +100,10 @@ nav button,.btn{border-radius:13px;transition:.2s transform,.2s box-shadow}.btn:
 .bird{position:absolute;width:42px;height:22px;animation:birdFly linear infinite}
 .bird:before,.bird:after{content:"";position:absolute;top:6px;width:20px;height:9px;border-top:3px solid currentColor;border-radius:50%}
 .bird:before{left:0;transform:rotate(15deg)}.bird:after{right:0;transform:rotate(-15deg)}
-.b1{top:17%;left:-10%;color:#4c5472;animation-duration:25s}.b2{top:29%;left:-15%;color:#68708c;animation-duration:34s;animation-delay:-11s;transform:scale(.72)}.b3{top:12%;left:-20%;color:#8189a1;animation-duration:43s;animation-delay:-24s;transform:scale(.52)}
+.b1{top:17%;left:-10%;color:#4c5472;animation-duration:38s}.b2{top:29%;left:-15%;color:#68708c;animation-duration:48s;animation-delay:-11s;transform:scale(.72)}.b3{top:12%;left:-20%;color:#8189a1;animation-duration:58s;animation-delay:-24s;transform:scale(.52)}
 @keyframes birdFly{0%{transform:translateX(0) translateY(0) scale(1)}25%{transform:translateX(30vw) translateY(-20px)}50%{transform:translateX(60vw) translateY(18px)}75%{transform:translateX(90vw) translateY(-12px)}100%{transform:translateX(125vw) translateY(0)}}
 .leaf-float{position:absolute;font-size:20px;opacity:.58;animation:leafDrift linear infinite}
-.leaf-float:nth-child(1){left:10%;top:-5%;animation-duration:16s}.leaf-float:nth-child(2){left:42%;top:-10%;animation-duration:21s;animation-delay:-7s}.leaf-float:nth-child(3){left:74%;top:-8%;animation-duration:18s;animation-delay:-11s}.leaf-float:nth-child(4){left:92%;top:5%;animation-duration:25s;animation-delay:-16s}
+.leaf-float:nth-child(1){left:10%;top:-5%;animation-duration:16s}.leaf-float:nth-child(2){left:42%;top:-10%;animation-duration:21s;animation-delay:-7s}.leaf-float:nth-child(3){left:74%;top:-8%;animation-duration:18s;animation-delay:-11s}.leaf-float:nth-child(4){left:92%;top:5%;animation-duration:38s;animation-delay:-16s}
 @keyframes leafDrift{0%{transform:translate(0,-30px) rotate(0deg)}25%{transform:translate(8vw,25vh) rotate(110deg)}50%{transform:translate(-4vw,52vh) rotate(220deg)}75%{transform:translate(12vw,76vh) rotate(310deg)}100%{transform:translate(-3vw,112vh) rotate(450deg)}}
 .firefly{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe89a;box-shadow:0 0 14px 5px rgba(255,232,154,.65);animation:firefly 4s ease-in-out infinite}
 .f1{left:17%;top:50%;animation-delay:-1s}.f2{left:65%;top:62%;animation-delay:-2s}.f3{left:82%;top:44%;animation-delay:-3s}.f4{left:38%;top:72%;animation-delay:-.5s}.f5{left:53%;top:37%;animation-delay:-2.5s}
@@ -320,6 +320,42 @@ body:not(.day) .tree .leaf{background:radial-gradient(circle at 30% 25%,#5b8d76,
 /* decorative gold rule */
 .hero-line:after{content:"";position:absolute;left:0;bottom:-7px;width:42px;height:1px;background:var(--lux-gold);opacity:.65}
 .hero-line{position:relative}
+
+/* ===== PROFESSIONAL LUXURY / RESTRAINED GAMIFICATION ===== */
+body{--ease:cubic-bezier(.22,1,.36,1)}
+body.day{--surface-hi:rgba(255,255,255,.80);--surface-low:rgba(247,243,233,.54);--gold:#aa7b2e;--gold-soft:#d4ad64}
+body:not(.day){--surface-hi:rgba(18,22,29,.84);--surface-low:rgba(24,29,37,.66);--gold:#d4ad64;--gold-soft:#ebce91}
+.card{background:linear-gradient(145deg,var(--surface-hi),var(--surface-low));backdrop-filter:blur(28px) saturate(120%);-webkit-backdrop-filter:blur(28px) saturate(120%)}
+body.day .card{box-shadow:0 25px 80px rgba(65,72,74,.11),inset 0 1px rgba(255,255,255,.65)}
+body:not(.day) .card{box-shadow:0 28px 90px rgba(0,0,0,.40),inset 0 1px rgba(255,255,255,.07)}
+nav button{letter-spacing:.01em}
+nav button.on{background:linear-gradient(135deg,#9d7631,#c59c56)!important;border:1px solid rgba(255,255,255,.16)!important}
+.btn.pri{background:linear-gradient(135deg,#96702e,#c69e59);border:1px solid rgba(255,255,255,.20)}
+.pc h2{font-family:Georgia,serif;font-weight:600}
+.hb{min-height:56px;transition:transform .35s var(--ease),background .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease)}
+.hb:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.07)}
+.hb.done{box-shadow:0 8px 24px rgba(61,128,100,.10),inset 0 1px rgba(255,255,255,.22)}
+.bar{height:8px;border-radius:999px}.bar i{background:linear-gradient(90deg,#9c7430,#5d987c)}
+.pets{min-height:235px!important;padding:18px 24px 14px!important;overflow:hidden;background:radial-gradient(circle at 17% 22%,rgba(216,181,106,.09),transparent 20%),radial-gradient(circle at 82% 30%,rgba(100,143,132,.10),transparent 25%),linear-gradient(180deg,rgba(255,255,255,.025),rgba(0,0,0,.06))}
+.pet-zone{grid-template-columns:1fr 1fr!important;max-width:620px;width:100%;margin:0 auto;align-items:end;gap:80px!important}
+.pet-zone .pet{width:auto!important;transition:transform .35s var(--ease),filter .35s var(--ease)}.pet-zone .pet:hover{transform:translateY(-4px);filter:brightness(1.04)}
+.pet-zone .pet svg{width:105px!important;height:105px!important;filter:drop-shadow(0 18px 14px rgba(0,0,0,.24))}
+.pet-hint{display:none!important}.bub{max-width:210px;margin:0 auto 7px!important;font-size:11px!important;opacity:.72;background:rgba(255,255,255,.035)!important}
+.play-zone{min-height:46px!important;margin-top:0!important;gap:22px!important}.toy{font-size:27px!important;opacity:.78;transition:transform .35s var(--ease),opacity .35s var(--ease),filter .35s var(--ease)}.toy:hover{opacity:1}
+.pets:after{content:"";position:absolute;left:10%;right:10%;bottom:50px;height:40px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.18),transparent 68%);filter:blur(7px);pointer-events:none}
+.tree .trunk{box-shadow:inset 3px 0 rgba(255,255,255,.08),inset -3px 0 rgba(0,0,0,.18)}.tree .leaf{box-shadow:inset 0 5px 12px rgba(255,255,255,.10),0 16px 28px rgba(0,0,0,.17)}
+body.day .tree .leaf{filter:saturate(.82)}body:not(.day) .tree .leaf{filter:saturate(.62) brightness(.72)}
+.bird{opacity:.58}body.day .bird{opacity:.42}
+.lux-achievement{background:rgba(10,13,18,.62)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.achievement-card{position:relative;width:min(420px,calc(100vw - 40px));padding:38px 42px 32px!important;border:1px solid rgba(216,181,106,.34);border-radius:26px!important;background:radial-gradient(circle at 50% 0,rgba(216,181,106,.14),transparent 34%),linear-gradient(145deg,#1b2028,#0e1218)!important;color:#f4f1e9!important;box-shadow:0 35px 100px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.08);overflow:hidden}
+body.day .achievement-card{background:radial-gradient(circle at 50% 0,rgba(216,181,106,.15),transparent 34%),linear-gradient(145deg,#fffdf8,#f2ede2)!important;color:#20252c!important}
+.achievement-card:before{content:"";position:absolute;left:18%;right:18%;top:0;height:1px;background:linear-gradient(90deg,transparent,#d8b56a,transparent)}
+.achievement-close{position:absolute;right:15px;top:12px;border:0;background:transparent;color:inherit;opacity:.45;font-size:25px;cursor:pointer}
+.achievement-mark{width:76px;height:76px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(216,181,106,.48);background:radial-gradient(circle at 35% 30%,rgba(244,216,154,.30),rgba(216,181,106,.06));box-shadow:0 0 40px rgba(216,181,106,.12),inset 0 1px rgba(255,255,255,.14)}
+.achievement-mark span{font-size:31px;filter:saturate(.55)}.achievement-kicker{color:#c9a45e;font-size:10px;font-weight:800;letter-spacing:.22em}
+.achievement-card h2{margin:10px 0 6px;font-family:Georgia,serif;font-size:27px;font-weight:500;letter-spacing:-.025em}.achievement-card p{margin:0;color:inherit;opacity:.55;font-size:12px}
+.achievement-rule{width:54px;height:1px;margin:23px auto;background:#c9a45e;opacity:.55}.achievement-continue{min-width:130px}
+.reward-box{font-size:12px}.reward-box b{letter-spacing:.01em}
 </style></head><body>
 <div class="sky" id="sky"></div>
 <main id="app"></main><div class="toast" id="toast"></div>
@@ -368,13 +404,13 @@ wins:O?ds.filter(x=>x.av>0&&x.pct>day(O.id,x.d).pct).length:0,done:ds.reduce((s,
 async function checkAch(){const u=S.me.id,s=ser(u),st=stk(u),o=opp(u),have=new Set(S.A.filter(a=>a.user_id==u).map(a=>a.achievement_type));
 const ok={first:S.L.some(l=>l.user_id==u),s3:st.b>=3,s7:st.b>=7,s14:st.b>=14,perfect:s.some(x=>x.perf),winner:!!o&&s.some(x=>x.d<T()&&x.av>0&&x.pct>day(o.id,x.d).pct),xp1000:xpT(u)>=1000};
 for(const k in ok)if(ok[k]&&!have.has(k)){const{error}=await sb.from('achievements').insert({user_id:u,achievement_type:k});if(!error){S.A.push({user_id:u,achievement_type:k});
-const m=document.createElement('div');m.className='modal';m.innerHTML=`<div><div style="font-size:64px">${ACH[k][0]}</div><h2>Achievement unlocked</h2><p>${ACH[k][1]}</p></div>`;m.onclick=()=>m.remove();document.body.appendChild(m);confetti(40)}}}
+const m=document.createElement('div');m.className='modal lux-achievement';m.innerHTML=`<div class="achievement-card"><button class="achievement-close" aria-label="Close">×</button><div class="achievement-mark"><span>${ACH[k][0]}</span></div><div class="achievement-kicker">ACHIEVEMENT UNLOCKED</div><h2>${ACH[k][1]}</h2><p>Consistency leaves a mark.</p><div class="achievement-rule"></div><button class="btn pri achievement-continue">Continue</button></div>`;m.onclick=e=>{if(e.target===m||e.target.closest('.achievement-close')||e.target.closest('.achievement-continue'))m.remove()};document.body.appendChild(m);confetti(24)}}}
 
 /* ---------- streak rewards / playful interactions ---------- */
-const STREAK_REWARDS={3:{icon:'🦴',name:'Starter Treat',desc:'3-day streak! Your pet earned a bone.',xp:30},7:{icon:'🧶',name:'Playtime',desc:'7-day streak! Unlock a wool-ball play reward.',xp:70},14:{icon:'🎁',name:'Consistency Chest',desc:'14-day streak! A bigger reward unlocked.',xp:140},21:{icon:'👑',name:'Streak Crown',desc:'21-day streak! You are officially on fire.',xp:210},30:{icon:'🏆',name:'Legend Reward',desc:'30-day streak! Legendary consistency.',xp:300}};
+const STREAK_REWARDS={3:{icon:'◈',name:'FIRST RHYTHM',desc:'Three days of showing up.',xp:30},7:{icon:'◉',name:'IN THE FLOW',desc:'One week of consistency.',xp:70},14:{icon:'◇',name:'DISCIPLINE',desc:'Two weeks of keeping your word.',xp:140},21:{icon:'◆',name:'MOMENTUM',desc:'Three weeks of steady progress.',xp:210},30:{icon:'✦',name:'UNSTOPPABLE',desc:'Thirty days. Consistency is becoming identity.',xp:300}};
 const streakReward=n=>Object.keys(STREAK_REWARDS).map(Number).filter(x=>n>=x).sort((a,b)=>b-a)[0];
-function streakRewardHTML(u){const k=streakReward(stk(u).c),r=k&&STREAK_REWARDS[k];return r?`<div class="reward-box"><span><b>${r.icon} ${r.name}</b><br><span class="mu">${r.desc}</span></span><span>+${r.xp} XP</span></div>`:`<div class="reward-box"><span>🔥 Build your first streak reward</span><b>3 days → 🦴</b></div>`}
-function toysHTML(){return `<div class="play-zone"><span class="toy" data-toy="ball" title="Throw wool ball">🧶</span><span class="toy" data-toy="bone" title="Give dog a bone">🦴</span><span class="toy" data-toy="spark" title="Celebrate">✨</span><span class="toy" data-toy="heart" title="Give love">💗</span></div><div class="mu" style="text-align:center;font-size:11px;margin-top:2px">🧶 Play · 🦴 Treat · ✨ Celebrate · 💗 Love</div>`}
+function streakRewardHTML(u){const k=streakReward(stk(u).c),r=k&&STREAK_REWARDS[k];return r?`<div class="reward-box"><span><b>${r.icon} ${r.name}</b><br><span class="mu">${r.desc}</span></span><span>+${r.xp} XP</span></div>`:`<div class="reward-box"><span>Build your first rhythm</span><b>3 days</b></div>`}
+function toysHTML(){return `<div class="play-zone"><span class="toy" data-toy="ball" title="Throw wool ball">🧶</span><span class="toy" data-toy="bone" title="Give dog a bone">🦴</span><span class="toy" data-toy="spark" title="Celebrate">✨</span><span class="toy" data-toy="heart" title="Give love">💗</span></div><div class="mu" style="text-align:center;font-size:11px;margin-top:2px">Play · Reward · Celebrate · Connect</div>`}
 
 function worldFloat(text,x,y){
   const e=document.createElement('div');e.className='world-toast';e.textContent=text;e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1500)
@@ -385,8 +421,8 @@ function hearts(target,n=3){
 }
 function petAction(el){
   const k=el.dataset.k;el.classList.remove('love','bark');void el.offsetWidth;
-  if(k==='dog'){el.classList.add('bark');hearts(el,2);toast(['🐶 WOOF! WOOF!','🐶 *happy tail wagging*','🐕 Best human!','🦴 BARK! Treat please!'][Math.floor(Math.random()*4)],2300)}
-  else{el.classList.add('love');hearts(el,4);toast(['🐱 Prrrrrr...','😽 Cat accepts your love.','🐾 *happy purr*','😻 You may pet the cat again.'][Math.floor(Math.random()*4)],2300)}
+  if(k==='dog'){el.classList.add('bark');hearts(el,2);toast(['A quiet bark from your companion.','Tail wagging. Good work.','Your companion noticed.','Someone is waiting for a reward.'][Math.floor(Math.random()*4)],2300)}
+  else{el.classList.add('love');hearts(el,4);toast(['A soft purr.','The cat settles beside you.','A quiet little stretch.','Your companion approves.'][Math.floor(Math.random()*4)],2300)}
 }
 function worldClick(type,el){
   const r=el.getBoundingClientRect();
@@ -405,7 +441,7 @@ else{const{data,error}=await sb.from('daily_habit_logs').upsert({user_id:u,habit
 idx();render();if(!had){const before=stk(u).c;const a=day(u,d);let k='win';
 if(a.perf&&!b.perf){k='perfect';confetti(90)}else if(a.hit&&!b.hit){k='target';confetti(45);toast('🎉 TARGET HIT  +10 XP · '+quote(k),5000);checkAch();return}
 else if(opp(u)&&a.pct>ob.pct&&b.pct<=ob.pct)k='crown';else if(a.pct>=50&&b.pct<50)k='half';
-const after=stk(u).c;const milestone=streakReward(after);if(milestone&&after>before){toast(`🔥 ${after}-DAY STREAK! ${STREAK_REWARDS[milestone].icon} ${STREAK_REWARDS[milestone].name}`,5000);confetti(55)}else toast((k=='perfect'?'👑 PERFECT DAY  +25 XP · ':'')+quote(k),5000);checkAch()}}
+const after=stk(u).c;const milestone=streakReward(after);if(milestone&&after>before){toast(`🔥 ${after}-DAY STREAK · ${STREAK_REWARDS[milestone].name}`,5000);confetti(55)}else toast((k=='perfect'?'👑 PERFECT DAY  +25 XP · ':'')+quote(k),5000);checkAch()}}
 async function act(a,el){const u=S.me?.id;
 if(a=='tog')return tog(el.dataset.id);
 if(a=='pet'){petAction(el);return}
@@ -463,15 +499,15 @@ function petMood(){const u=S.me.id,t=day(u,S.date);if(!t.av)return null;return t
 function petsHTML(){
   const t=day(S.me.id,S.date),m=petMood()||'push',n=r1(tg(S.me.id)-t.pct),i=(S.date.charCodeAt(9)||0)%2;
   return `<div class="card pets" style="margin-top:14px">
-    <div class="hero-line"><b>🌿 Your Living World</b><span class="mu">Click the pets, trees, birds or leaves</span></div>
+    <div class="hero-line"><b>THE COMPANION GARDEN</b><span class="mu">A quiet place to reset</span></div>
     <div class="pet-zone">
       <div class="pet ${m}" data-a="pet" data-k="cat" data-m="${m}">
         <div class="bub">${PL[m].cat[i%PL[m].cat.length].replace('{n}',n)}</div>${face('cat',m=='push'?'flat':m)}
-        <div class="pet-hint">🐱 click me</div>
+        
       </div>
       <div class="pet ${m}" data-a="pet" data-k="dog" data-m="${m}">
         <div class="bub">${PL[m].dog[i%PL[m].dog.length].replace('{n}',n)}</div>${face('dog',m=='push'?'flat':m)}
-        <div class="pet-hint">🐶 click me</div>
+        
       </div>
     </div>
     ${toysHTML()}
@@ -525,11 +561,11 @@ const rows=[['Completion today',x=>r1(day(x,d).pct)+'%',x=>day(x,d).pct],['Lifet
 const lb=p1?`<div class="card" style="margin-top:14px"><b>🏆 Leaderboard</b><table><tr><th></th><th>${esc(p0.name)}</th><th>${esc(p1.name)}</th></tr>${rows.map(([n,f,v])=>{const a=v(p0.id),b=v(p1.id);return`<tr><td>${n}</td><td class="${a>b?'lead':''}">${f(p0.id)}</td><td class="${b>a?'lead':''}">${f(p1.id)}</td></tr>`}).join('')}</table></div>`:'';
 const col=(p,i)=>{if(!p)return'';const hs=live(p.id,d),mine=p.id==u,t=day(p.id,d);return`<div class="card"><b>${esc(p.name)}</b> <span class="mu">${t.e}/${t.av} XP</span>${bar(t.pct)}${hs.length?hs.map(h=>`<button class="hb ${LI[h.id+'|'+d]?'done':''}" data-a="tog" data-id="${h.id}" ${mine?'':'disabled'}><span class="ck">${LI[h.id+'|'+d]?'✅':'☐'}</span>${esc(h.habit_name)}<span class="x">+${h.points} XP</span></button>`).join(''):'<div class="empty-missions"><b>🌱 No missions yet</b><p class="mu">Click below to add your recommended missions.</p><button class="btn pri" data-a="applyMissions">✨ Add my missions</button></div>'}</div>`};
 const ch=CH[[...d].reduce((s,c)=>s+c.charCodeAt(0),0)%CH.length];
-return`${dq()}<div class="win card">🏆 WHO IS WINNING?<br>${w}${p1?`<div class="tug"><i style="width:${(()=>{const a=day(p0.id,d).pct,b=day(p1.id,d).pct;return a+b?a/(a+b)*100:50})()}%"></i></div>`:''}</div>${petsHTML()}<div class="g2" style="margin-top:14px">${S.P.map(card).join('')}</div>${lb}
-<div class="card" style="margin-top:14px"><b>⚡ Today's bonus</b> <span class="mu">${ch}</span></div>
+return`${dq()}<div class="win card">TODAY'S LEADER<br>${w}${p1?`<div class="tug"><i style="width:${(()=>{const a=day(p0.id,d).pct,b=day(p1.id,d).pct;return a+b?a/(a+b)*100:50})()}%"></i></div>`:''}</div>${petsHTML()}<div class="g2" style="margin-top:14px">${S.P.map(card).join('')}</div>${lb}
+<div class="card" style="margin-top:14px"><b>TODAY'S BONUS</b> <span class="mu">${ch}</span></div>
 <div class="row" style="justify-content:center;margin-top:16px"><button class="btn" data-a="prev">← Previous day</button><button class="btn pri" data-a="today">${d==T()?'TODAY':d}</button><button class="btn" data-a="next">Next day →</button></div><div class="g2">${col(p0)}${col(p1)}</div>
 <div class="mission-board">
-  <div class="mission-title"><b>🗺️ Mission Board</b><span class="mu">Different missions. Same battle.</span></div>
+  <div class="mission-title"><b>MISSION BOARD</b><span class="mu">Different missions. Same standard.</span></div>
   <div class="row">
     ${S.P.map(p=>`<span class="mission-chip">${p.name}: ${live(p.id,d).length} active missions · ${day(p.id,d).av} pts available</span>`).join('')}
   </div>
