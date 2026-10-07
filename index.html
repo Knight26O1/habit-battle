@@ -522,6 +522,27 @@ body:not(.day) .card,body:not(.day) .hero,body:not(.day) .rhythm-card,body:not(.
 body:not(.day) h1,body:not(.day) .hero-title,body:not(.day) .rhythm-value,body:not(.day) .st b{text-shadow:0 0 18px rgba(77,225,255,.4)}
 body:not(.day) nav button.on,body:not(.day) .btn.pri,body:not(.day) .theme-switcher button.active{background:#4de1ff;color:#02131a;box-shadow:0 0 18px rgba(77,225,255,.5)}
 body:not(.day) .btn,body:not(.day) nav button{text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+
+/* ===== V13: 3D designer layer ===== */
+#spot{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 62%);mix-blend-mode:soft-light;will-change:transform}
+body:not(.day) #spot{background:radial-gradient(circle,rgba(77,225,255,.14),transparent 62%);mix-blend-mode:screen}
+.sky{will-change:transform;transition:transform .3s ease-out}.card,.hero,.rhythm-card{will-change:transform;transform-style:preserve-3d}
+.btn,nav button,.hb{position:relative;overflow:hidden}.rip{position:absolute;width:12px;height:12px;margin:-6px;border-radius:50%;background:currentColor;opacity:.25;pointer-events:none;animation:rp3 .6s forwards}@keyframes rp3{to{transform:scale(18);opacity:0}}
+#app.enter>*{animation:rise3 .6s cubic-bezier(.2,.8,.2,1) both}#app.enter>:nth-child(2){animation-delay:.06s}#app.enter>:nth-child(3){animation-delay:.12s}#app.enter>:nth-child(4){animation-delay:.18s}#app.enter>:nth-child(5){animation-delay:.24s}#app.enter>:nth-child(6){animation-delay:.3s}#app.enter>:nth-child(n+7){animation-delay:.36s}
+@keyframes rise3{from{opacity:0;transform:translateY(22px) rotateX(8deg)}to{opacity:1;transform:none}}
+#cube{position:fixed;right:20px;bottom:90px;width:84px;height:84px;perspective:420px;z-index:9;cursor:grab;touch-action:none}#cube .c3{position:absolute;inset:0;transform-style:preserve-3d}
+#cube .f{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:700 10px/1.2 Inter,system-ui,sans-serif;letter-spacing:.12em;color:var(--tx);background:var(--panel);border:1px solid var(--bd);border-radius:12px;backface-visibility:hidden;box-shadow:inset 0 0 24px rgba(255,255,255,.07)}
+#cube .f b{display:block;font-size:22px;letter-spacing:0;color:var(--a)}
+.f1{transform:translateZ(42px)}.f2{transform:rotateY(90deg) translateZ(42px)}.f3{transform:rotateY(180deg) translateZ(42px)}.f4{transform:rotateY(-90deg) translateZ(42px)}.f5{transform:rotateX(90deg) translateZ(42px)}.f6{transform:rotateX(-90deg) translateZ(42px)}
+@media(max-width:700px){#cube{display:none}}
+#greet{position:fixed;inset:0;z-index:40;display:grid;place-items:center;text-align:center;padding:20px;background:radial-gradient(900px 600px at 50% 40%,color-mix(in srgb,var(--a) 24%,transparent),transparent),var(--bg1,#0b0a14);perspective:900px;transition:opacity .6s,transform .6s;cursor:pointer}#greet.out{opacity:0;transform:scale(1.08);pointer-events:none}
+.gk{letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:var(--mu);animation:rise3 .8s both}
+.gn{font-size:clamp(46px,12vw,120px);font-weight:800;line-height:1.05;margin:8px 0;transform-style:preserve-3d;color:var(--tx)}.gn span{display:inline-block;transform-origin:50% 100%;animation:flip3 .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes flip3{from{opacity:0;transform:rotateX(-90deg) translateY(30px)}to{opacity:1;transform:none}}
+.gl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}.gl i{font-style:normal;font-size:13px;padding:6px 14px;border:1px solid var(--bd);border-radius:99px;background:var(--panel);color:var(--tx);animation:rise3 .8s .7s both}
+.gq{max-width:560px;margin:14px auto;color:var(--tx);opacity:.85;animation:rise3 .8s 1s both}.gt{font-size:11px;color:var(--mu);letter-spacing:.2em;text-transform:uppercase;animation:rise3 .8s 1.4s both}
+@media print{#cube,#spot,#greet{display:none!important}}
+@media(prefers-reduced-motion:reduce){#greet *,#cube .c3,#app.enter>*{animation:none!important}}
 </style><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet"></head><body>
 <div class="sky" id="sky"></div>
 <main id="app"></main><div class="toast" id="toast"></div>
@@ -586,7 +607,7 @@ if(a=='tog')return tog(el.dataset.id);
 if(a=='pet'){const L=PL[el.dataset.m][el.dataset.k];return toast(L[Math.floor(Math.random()*L.length)].replace('{n}',r1(tg(u)-day(u,S.date).pct)),3000)}
 if(a=='prev'||a=='next'){S.date=add(S.date,a=='prev'?-1:1);return render()}
 if(a=='today'){S.date=T();return render()}
-if(a=='pg'){S.page=el.dataset.p;return render()}
+if(a=='pg'){S.page=el.dataset.p;S.enter=1;return render()}
 if(a=='wk'||a=='mo'){S[a]+=+el.dataset.n;return render()}
 if(a=='google'){const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)toast(error.message,9000);return}
 if(a=='signin'||a=='signup'){const n=($('#nm').value||'').trim(),e=n.toLowerCase().replace(/[^a-z0-9]/g,'')+'@habitbattle.app',p=$('#pw').value;if(!n)return toast('Enter your name.');
@@ -650,6 +671,27 @@ const tick=()=>{if(S.P.length<2)return'';const[a,b]=S.P,d=T(),x=day(a.id,d),y=da
 const it=[`${N(a)} <b class="${x.pct>=y.pct?'up':'dn'}">${r1(x.pct)}%</b>`,`${N(b)} <b class="${y.pct>x.pct?'up':'dn'}">${r1(y.pct)}%</b>`,`LEAD <b>${df<.5?'EVEN':esc(L.name)+' +'+r1(df)+'%'}</b>`,`${N(a)} STREAK <b>${stk(a.id).c}D</b>`,`${N(b)} STREAK <b>${stk(b.id).c}D</b>`,`XP <b>${xpT(a.id)} / ${xpT(b.id)}</b>`,new Date().toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()].map(s=>`<span>${s}</span>`).join('');return`<div class="tk"><div>${it}${it}</div></div>`};
 const bw=u=>{const a=[0,0,0,0,0,0,0],n=[0,0,0,0,0,0,0];ser(u).forEach(x=>{if(x.av){const w=(new Date(x.d+'T12:00').getDay()+6)%7;a[w]+=x.pct;n[w]++}});let b=-1,v=-1;a.forEach((s,i)=>{if(n[i]&&s/n[i]>v){v=s/n[i];b=i}});return b<0?'–':['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][b]};
 function heat(){return`<div class="card" style="margin-top:12px"><b>Consistency · last 12 weeks</b>${S.P.map((p,i)=>{const s=mon(add(T(),-77));let c='';for(let k=0;k<84;k++){const d=add(s,k),t=d<=T()?day(p.id,d):{av:0,pct:0};c+=`<i class="h h${!t.av?0:t.pct>=100?4:t.pct>=tg(p.id)?3:t.pct>=50?2:1}" title="${d} · ${r1(t.pct)}%"></i>`}return`<div class="hm"><span>${esc(p.name)}<br><small>Best day: ${bw(p.id)}</small></span><div class="hg p${i}">${c}</div></div>`}).join('')}</div>`}
+let CB={x:-18,y:30,drag:0};
+function cubeInit(){if($('#cube'))return;const c=document.createElement('div');c.id='cube';c.innerHTML='<div class="c3"></div>';document.body.appendChild(c);const c3=c.firstChild,set=()=>c3.style.transform=`rotateX(${CB.x}deg) rotateY(${CB.y}deg)`;set();
+c.onpointerdown=e=>{CB.drag=1;CB.px=e.clientX;CB.py=e.clientY;c.setPointerCapture(e.pointerId);c.style.cursor='grabbing'};
+c.onpointermove=e=>{if(!CB.drag)return;CB.y+=(e.clientX-CB.px)*.8;CB.x-=(e.clientY-CB.py)*.8;CB.px=e.clientX;CB.py=e.clientY;set()};
+c.onpointerup=()=>{CB.drag=0;c.style.cursor='grab'};
+(function spin(){if(!CB.drag&&!matchMedia('(prefers-reduced-motion:reduce)').matches){CB.y+=.35;set()}requestAnimationFrame(spin)})()}
+function cubeRefresh(){const c=$('#cube');if(!c||!S.me)return;const u=S.me.id,x=xpT(u),k=stk(u),t=day(u,T()),F=[['LEVEL',lv(x).l],['STREAK',k.c+'d'],['XP',x],['TODAY',r1(t.pct)+'%'],['BEST',k.b+'d'],['TARGET',tg(u)+'%']];c.firstChild.innerHTML=F.map((f,i)=>`<div class="f f${i+1}"><span><b>${f[1]}</b>${f[0]}</span></div>`).join('')}
+function greet(){const u=S.me.id,pr=me();if(sessionStorage.greeted||!pr){weeklyCheck();return}sessionStorage.greeted=1;
+const h=new Date().getHours(),g=h<5?'Still up':h<12?'Good morning':h<17?'Good afternoon':h<22?'Good evening':'Late night focus',k=stk(u),y=day(u,add(T(),-1)),L=lv(xpT(u));
+const q=typeof DQ!='undefined'?DQ[Math.floor(new Date(T()+'T12:00')/864e5)%DQ.length]:'';
+const lines=[k.c?`🔥 ${k.c}-day streak alive`:'Fresh start today',y.av?`Yesterday ${r1(y.pct)}%`:'',`Level ${L.l}`,`Target ${tg(u)}% today`].filter(Boolean),el=document.createElement('div');el.id='greet';
+el.innerHTML=`<div><div class="gk">${g}</div><div class="gn">${[...pr.name].map((c,i)=>`<span style="animation-delay:${.15+i*.07}s">${c==' '?'&nbsp;':esc(c)}</span>`).join('')}</div><div class="gl">${lines.map(l=>`<i>${l}</i>`).join('')}</div><div class="gq">${q?'“'+q+'”':''}</div><div class="gt">Tap anywhere to enter</div></div>`;
+const out=()=>{if(!el.parentNode||el.classList.contains('out'))return;el.classList.add('out');setTimeout(()=>{el.remove();weeklyCheck()},600)};el.onclick=out;document.body.appendChild(el);setTimeout(out,4500)}
+(function(){const fine=!matchMedia('(pointer:coarse)').matches,rm=matchMedia('(prefers-reduced-motion:reduce)').matches;let last=null;
+if(fine){const sp=document.createElement('div');sp.id='spot';document.body.appendChild(sp);
+addEventListener('pointermove',e=>{sp.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;const sk=document.querySelector('.sky');if(sk&&!rm)sk.style.transform=`translate(${(e.clientX/innerWidth-.5)*-18}px,${(e.clientY/innerHeight-.5)*-18}px) scale(1.06)`;
+const el=e.target.closest&&e.target.closest('.card,.hero,.rhythm-card');if(last&&last!==el){last.style.transition='transform .5s';last.style.transform=''}
+if(el&&!rm){const r=el.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5,m=Math.min(5,2200/r.width);el.style.transition='transform .1s';el.style.transform=`perspective(900px) rotateX(${(-py*m).toFixed(2)}deg) rotateY(${(px*m).toFixed(2)}deg) translateY(-2px)`}last=el})}
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('.btn,nav button,.hb');if(!b)return;const r=b.getBoundingClientRect(),s=document.createElement('i');s.className='rip';s.style.left=e.clientX-r.left+'px';s.style.top=e.clientY-r.top+'px';b.appendChild(s);setTimeout(()=>s.remove(),600)});
+addEventListener('keydown',e=>{if(!S.me||e.target.matches('input,select,textarea')||e.metaKey||e.ctrlKey)return;const P=['home','weekly','monthly','all','set'],i=+e.key;
+if(i>=1&&i<=5){S.page=P[i-1];S.enter=1;render()}else if(e.key=='d'){const o=['auto','day','night'];localStorage.th=o[(o.indexOf(localStorage.th||'auto')+1)%3];theme();render()}else if((e.key=='ArrowLeft'||e.key=='ArrowRight')&&S.page=='home'){S.date=add(S.date,e.key=='ArrowLeft'?-1:1);render()}})})();
 // ---------- views ----------
 const bar=p=>`<div class="bar"><i style="width:${p}%"></i></div>`;
 function chart(lb,A,B){const W=700,H=200,g=W/lb.length;let s=`<svg class="chart" viewBox="0 0 ${W} ${H+24}">`;lb.forEach((l,i)=>{const x=i*g+g/2;[[A[i],-13,'var(--a)'],[B[i],3,'var(--b)']].forEach(([v,o,c])=>{const h=(v||0)*H/100;s+=`<rect x="${x+o}" y="${H-h}" width="12" height="${h}" rx="3" fill="${c}"/>`});s+=`<text x="${x}" y="${H+16}">${l}</text>`});return s+'</svg>'}
@@ -755,7 +797,7 @@ function shell(inner){
 
   ${inner}`;
 }
-function render(){$('#app').innerHTML=shell({home,weekly,monthly,all:alltime,set:settings}[S.page]());clock();roam();petsRefresh()}
+function render(){$('#app').classList.toggle('enter',!!S.enter);S.enter=0;$('#app').innerHTML=shell({home,weekly,monthly,all:alltime,set:settings}[S.page]());clock();roam();petsRefresh();cubeInit();cubeRefresh();try{document.title=r1(day(S.me.id,T()).pct)+"% · Habit Battle"}catch(e){}}
 function clock(){const e=$('#clk');if(e)e.textContent=new Date().toLocaleString('en',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}
 function theme(){const m=localStorage.th||'auto',h=new Date().getHours(),night=m=='night'||(m=='auto'&&(h<6||h>=18));document.body.classList.toggle('day',!night);document.body.classList.toggle('nopets',localStorage.pets=='off');document.documentElement.dataset.theme=m}
 function sky(){
@@ -822,7 +864,7 @@ toast('A soft breeze moves through the garden.',2200)
 function authView(){$('#app').innerHTML=`<h1>HABIT BATTLE</h1><div class="sub">Two people. Different goals. One shared standard.</div><div class="card" style="max-width:380px;margin:30px auto"><div class="row"><input class="hn" id="nm" placeholder="Your name (Utkarsh / Kalash)" maxlength="30"></div><div class="row"><input class="hn" id="pw" type="password" placeholder="Password (min 6 characters)"></div><div class="row"><button class="btn pri" data-a="signin">Enter battle</button><button class="btn" data-a="signup">First time? Join</button></div></div>`}
 async function boot(){if(SUPABASE_URL.startsWith('PASTE')){$('#app').innerHTML='<div class="card" style="margin:40px 0">Setup needed: paste your Supabase URL and anon key at the top of the script in index.html.</div>';return}
 sb=sb||supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const{data:{session}}=await sb.auth.getSession();if(!session)return authView();S.me=session.user;await load();
-if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}render();weeklyCheck();goLive()}
+if(!S.P.some(p=>p.id==S.me.id)){await sb.from('profiles').insert({id:S.me.id,name:(S.me.user_metadata?.name||S.me.user_metadata?.full_name||'Player').slice(0,30)});await load()}S.enter=1;render();greet();goLive()}
 
 document.addEventListener('click',e=>{
   const th=e.target.closest('[data-theme]');
